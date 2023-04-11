@@ -1,0 +1,7 @@
+Metadata-Version: 2.1
+Name: kybra
+Version: 0.4.0
+License-File: LICENSE
+License-File: NOTICE
+Requires-Dist: modulegraph (==0.19.3)
+
