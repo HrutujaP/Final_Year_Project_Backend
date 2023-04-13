@@ -1,22 +1,13 @@
 {
     "canisters": {
-        "canister1": {
+    
+        "Account": {
             "type": "custom",
-            "build": "python -m kybra canister1 src/canister1/canister1.py src/canister1/canister1.did",
-            "candid": "src/canister1/canister1.did",
-            "wasm": ".kybra/canister1/canister1.wasm.gz",
+            "build": "python3 -m kybra account src/account/account.py src/account/account.did",
+            "candid": "src/account/account.did",
+            "wasm": ".kybra/account/account.wasm.gz",
             "declarations": {
-                "output": "test/dfx_generated/canister1",
-                "node_compatibility": true
-            }
-        },
-        "canister2": {
-            "type": "custom",
-            "build": "python -m kybra canister2 src/canister2/canister2.py src/canister2/canister2.did",
-            "candid": "src/canister2/canister2.did",
-            "wasm": ".kybra/canister2/canister2.wasm.gz",
-            "declarations": {
-                "output": "test/dfx_generated/canister2",
+                "output": "test/dfx_generated/account",
                 "node_compatibility": true
             }
         }

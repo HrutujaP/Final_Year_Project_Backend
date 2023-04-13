@@ -1,0 +1,4 @@
+service : () -> {
+  create_account : (text, text, int) -> (text);
+  get_account : (int) -> (text) query;
+}
