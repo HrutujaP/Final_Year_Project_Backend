@@ -3,7 +3,7 @@ import math
 import _random
 
 class Account(Record):
-    Id : int 
+    Id : Principal
     Name : str
     Email : str
     Balance : int
