@@ -1,16 +1,25 @@
-# Heading
+# Important Commands
 
+To create the virtual environment
 ```
-dfx deploy
+python3 -m venv venv
 ```
-
+To activate the virtual environment
+```
+source venv/bin/activate
+```
 
 1. Start DFX
 ```
 dfx start --background
 ```
 
-2. run virtual environment
+2. Deploy the project
 ```
-source .env/bin/activate
+dfx deploy (Optional Canister Name)
+```
+
+To Clean Stable Data and clear storages of canister
+```
+dfx canister uninstall-code
 ```
