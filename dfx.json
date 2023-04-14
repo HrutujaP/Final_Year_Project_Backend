@@ -10,6 +10,6 @@
                 "output": "test/dfx_generated/account",
                 "node_compatibility": true
             }
-        }
+        }   
     }
 }

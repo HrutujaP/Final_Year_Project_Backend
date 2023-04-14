@@ -2142,7 +2142,7 @@ fn _kybra_pre_upgrade() {
 }
 #[ic_cdk_macros::query()]
 #[candid::candid_method(query)]
-async fn get_account(_cdk_user_defined_Id: candid::Int) -> String {
+async fn get_account(_cdk_user_defined_Id: candid::Principal) -> String {
     unsafe {
         let _kybra_interpreter = _KYBRA_INTERPRETER_OPTION.as_mut().unwrap();
         let _kybra_scope = _KYBRA_SCOPE_OPTION.as_mut().unwrap();
@@ -2194,7 +2194,7 @@ async fn get_balance(_cdk_user_defined_Id: candid::Int) -> candid::Int {
 }
 #[ic_cdk_macros::query()]
 #[candid::candid_method(query)]
-async fn get_all_accounts() -> String {
+async fn get_all_accounts() -> Vec<candid::Int> {
     unsafe {
         let _kybra_interpreter = _KYBRA_INTERPRETER_OPTION.as_mut().unwrap();
         let _kybra_scope = _KYBRA_SCOPE_OPTION.as_mut().unwrap();
@@ -2219,11 +2219,7 @@ async fn get_all_accounts() -> String {
 }
 #[ic_cdk_macros::update]
 #[candid::candid_method(update)]
-async fn create_account(
-    _cdk_user_defined_Name: String,
-    _cdk_user_defined_email: String,
-    _cdk_user_defined_Id: candid::Int,
-) -> String {
+async fn create_account(_cdk_user_defined_Name: String, _cdk_user_defined_email: String) -> String {
     unsafe {
         let _kybra_interpreter = _KYBRA_INTERPRETER_OPTION.as_mut().unwrap();
         let _kybra_scope = _KYBRA_SCOPE_OPTION.as_mut().unwrap();
@@ -2237,8 +2233,35 @@ async fn create_account(
             (
                 _cdk_user_defined_Name.try_into_vm_value(vm).unwrap(),
                 _cdk_user_defined_email.try_into_vm_value(vm).unwrap(),
-                _cdk_user_defined_Id.try_into_vm_value(vm).unwrap(),
             ),
+        );
+        match invoke_result {
+            Ok(py_object_ref) => {
+                let _kybra_final_return_value =
+                    _kybra_async_result_handler(vm, &py_object_ref, vm.ctx.none()).await;
+                _kybra_final_return_value.try_from_vm_value(vm).unwrap()
+            }
+            Err(err) => {
+                let err_string: String = err.to_pyobject(vm).repr(vm).unwrap().to_string();
+                panic!("{}", err_string);
+            }
+        }
+    }
+}
+#[ic_cdk_macros::update]
+#[candid::candid_method(update)]
+async fn delete_account(_cdk_user_defined_Id: candid::Principal) -> String {
+    unsafe {
+        let _kybra_interpreter = _KYBRA_INTERPRETER_OPTION.as_mut().unwrap();
+        let _kybra_scope = _KYBRA_SCOPE_OPTION.as_mut().unwrap();
+        let vm = &_kybra_interpreter.vm;
+        let method_py_object_ref = _kybra_unwrap_rust_python_result(
+            _kybra_scope.globals.get_item("delete_account", vm),
+            vm,
+        );
+        let invoke_result = vm.invoke(
+            &method_py_object_ref,
+            (_cdk_user_defined_Id.try_into_vm_value(vm).unwrap(),),
         );
         match invoke_result {
             Ok(py_object_ref) => {

@@ -1,6 +1,0 @@
-service : () -> {
-  create_account : (text, text, int) -> (text);
-  get_account : (int) -> (text) query;
-  get_all_accounts : () -> (text) query;
-  get_balance : (int) -> (int) query;
-}
