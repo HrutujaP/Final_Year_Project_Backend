@@ -18,3 +18,8 @@ dfx start --background
 ```
 dfx deploy (Optional Canister Name)
 ```
+
+To Clean Stable Data and clear storages of canister
+```
+dfx canister uninstall-code
+```
