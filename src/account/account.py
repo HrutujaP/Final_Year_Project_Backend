@@ -1,17 +1,10 @@
 from kybra import query, update,init,ic,nat8
+from Account import Account
+
 
 accounts = {}
 
-class Account():
-    def __init__(self, balance: int, Name:str,email:str,Id:int):
-        self.balance = balance
-        self.Name = Name
-        self.email = email
-        self.Id = Id
-        
-    def get_balance(self) -> int:
-        return self.balance
-    
+
     
 @update
 def create_account(Name:str,email:str,Id:int) -> str:
