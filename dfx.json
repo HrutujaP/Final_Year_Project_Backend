@@ -1,6 +1,5 @@
 {
     "canisters": {
-    
         "Account": {
             "type": "custom",
             "build": "python3 -m kybra account src/account/account.py src/account/account.did",
@@ -10,6 +9,16 @@
                 "output": "test/dfx_generated/account",
                 "node_compatibility": true
             }
-        }   
+        },
+        "Balance": {
+            "type": "custom",
+            "build": "python3 -m kybra Balance src/Balance/grantInitialBalance.py src/Balance/grantInitialBalance.did",
+            "candid": "src/Balance/grantInitialBalance.did",
+            "wasm": ".kybra/Balance/Balance.wasm.gz",
+            "declarations": {
+                "output": "test/dfx_generated/Balance",
+                "node_compatibility": true
+            }
+        }
     }
 }

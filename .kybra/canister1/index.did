@@ -1,4 +1,0 @@
-service : () -> {
-  get_message : () -> (text) query;
-  set_message : (text) -> (null);
-}
