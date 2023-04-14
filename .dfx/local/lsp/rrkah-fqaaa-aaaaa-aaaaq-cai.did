@@ -1,7 +1,0 @@
-service : () -> {
-  create_account : (text, text) -> (text);
-  delete_account : (principal) -> (text);
-  get_account : (principal) -> (text) query;
-  get_all_accounts : () -> (vec int) query;
-  get_balance : (int) -> (int) query;
-}

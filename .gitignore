@@ -4,4 +4,5 @@
 # This is just for verbosity, you can leave it out if
 # .gitignore is already tracked or if you use -f to
 # force-add it if you just created it
+.dfx/
 venv
