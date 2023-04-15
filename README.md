@@ -1,35 +1,36 @@
 # Important Commands
 
-To create the virtual environment
+### To create the virtual environment
 ```
 python3 -m venv venv
 ```
-To activate the virtual environment
+### To activate the virtual environment
 ```
 source venv/bin/activate
 ```
 
-1. Start DFX
+## To run the project
+### 1. Start DFX
 ```
 dfx start --background
 ```
 
-2. Deploy the project
+### 2. Deploy the project
 ```
 dfx deploy (Optional Canister Name)
 ```
 
-To Clean Stable Data and clear storages of canister
+## To Clean Stable Data and clear storages of canister
 ```
 dfx canister uninstall-code
 ```
 
 ## To run the Api
-1. install node modules
+### 1. install node modules
 ```
 npm i
 ```
-2. Run the server
+### 2. Run the server
 ```
 nodemon
 ```
