@@ -23,3 +23,13 @@ To Clean Stable Data and clear storages of canister
 ```
 dfx canister uninstall-code
 ```
+
+## To run the Api
+1. install node modules
+```
+npm i
+```
+2. Run the server
+```
+nodemon
+```
