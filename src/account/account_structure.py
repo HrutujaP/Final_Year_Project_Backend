@@ -1,4 +1,4 @@
-from kybra import Record,Principal
+from kybra import Record,Principal,ic
 import math
 import _random
 
@@ -10,10 +10,13 @@ class Account(Record):
 
 
 def generate_id(email) -> Principal:
-    # return Principal.from_str(str(email))
+    generated = Principal.from_str(email)
+    ic.print(generated)
+    return generated
     
-    random_bytes = bytes(
-        [math.floor(_random.Random().random() * 256) for _ in range(29)]
-    )
+    # random_bytes = bytes(
+    #     [math.floor(_random.Random().random() * 256) for _ in range(29)]
+    # )
     
-    return Principal.from_hex(random_bytes.hex())
+    # return Principal.from_hex(random_bytes.hex())
+    
