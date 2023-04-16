@@ -1,5 +1,5 @@
 from kybra import query, update,StableBTreeMap,Principal,ic,opt
-from account.account_structure import Account,generate_id
+from account_structure import Account,generate_id
 
 accounts = StableBTreeMap[Principal,Account](
     memory_id=0,max_key_size=1000,max_value_size=10000

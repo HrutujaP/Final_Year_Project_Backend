@@ -7,7 +7,8 @@ import { agent } from '../agent.js';
 
 var router = express.Router();
 
-const accountActor = Actor.createActor(idlFactory, { agent, canisterId: Principal.fromText('rrkah-fqaaa-aaaaa-aaaaq-cai') });
+// const accountActor = Actor.createActor(idlFactory, { agent, canisterId: Principal.fromText('rrkah-fqaaa-aaaaa-aaaaq-cai') });
+const accountActor = Actor.createActor(idlFactory, { agent, canisterId: Principal.fromText('yvrmz-eaaaa-aaaao-aifqq-cai') });
 
 router.post('/create_account', async (req, res) => {
     
@@ -15,7 +16,8 @@ router.post('/create_account', async (req, res) => {
 
         const { name, email } = req.body;
         const result = await accountActor.create_account(String(name), String(email));
-        res.send(Principal.fromUint8Array(result._arr).toText());
+        // console.log(result);
+        res.send(Principal.fromUint8Array(result[0]._arr).toText());
     }
     catch(err){
         console.log(err);
