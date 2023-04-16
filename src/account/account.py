@@ -8,7 +8,7 @@ accounts = StableBTreeMap[Principal,Account](
    
 @update
 def create_account(Name:str,email:str) -> opt[Principal]:
-    Id = generate_id()
+    Id = generate_id(email)
     new_account : Account = {
         "Id" : Id,
         "Name" : Name,

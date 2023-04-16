@@ -6,7 +6,7 @@
             "candid": "src/account/account.did",
             "wasm": ".kybra/account/account.wasm.gz",
             "declarations": {
-                "output": "api/account",
+                "output": "api/Canisters/account",
                 "node_compatibility": true
             }
         },
@@ -16,7 +16,7 @@
             "candid": "src/Balance/grantInitialBalance.did",
             "wasm": ".kybra/Balance/Balance.wasm.gz",
             "declarations": {
-                "output": "api/Balance",
+                "output": "api/Canisters/Balance",
                 "node_compatibility": true
             }
         }
