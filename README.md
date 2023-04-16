@@ -8,6 +8,10 @@ python3 -m venv venv
 ```
 source venv/bin/activate
 ```
+### To deactivate the virtual environment
+```
+deactivate
+```
 
 ## To run the project
 ### 1. Start DFX
