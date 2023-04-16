@@ -22,7 +22,7 @@ dfx deploy (Optional Canister Name)
 
 ## To Clean Stable Data and clear storages of canister
 ```
-dfx canister uninstall-code
+dfx canister uninstall-code (--all to uninstall all canisters / canister_name to uninstall specific canister)
 ```
 
 ## To run the Api
@@ -33,4 +33,8 @@ npm i
 ### 2. Run the server
 ```
 nodemon
+```
+## To generate the IDL Factory
+```
+dfx generate
 ```

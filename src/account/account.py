@@ -1,5 +1,6 @@
 from kybra import query, update,StableBTreeMap,Principal,ic,opt,nat
-from Account import Account,generate_id
+from account.account_structure import Account, generate_id
+
 
 accounts = StableBTreeMap[Principal,Account](
     memory_id=0,max_key_size=1000,max_value_size=10000
@@ -15,6 +16,7 @@ balances.insert( Principal.from_str("o35gm-zsefe-wylhy-bq2xh-u53xd-d6xzk-hzwgm-r
 def create_account(Name:str,email:str) -> opt[Principal]:
     Id = generate_id()
     balances.insert(Id,1000)
+    Id = generate_id(email)
     new_account : Account = {
         "Id" : Id,
         "Name" : Name,
@@ -65,7 +67,7 @@ def get_account(Id:Principal) -> opt[str]:
 
 @query
 def get_balance(Id:Principal) -> nat:
-    account = accounts.get(Id)
+    # account = accounts.get(Id)
     balance = balances.get(Id)
     # 7w4cb-txlvl-4k3ox-yfgv6-zdddx-qpojm-pe2zb-myj7c-okbqu-yf4l4-ehy
     ic.print(balances.get(Principal.from_str("o35gm-zsefe-wylhy-bq2xh-u53xd-d6xzk-hzwgm-rcs2q-wxmag-ehrjd-kqe")))
