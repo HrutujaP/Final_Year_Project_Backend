@@ -9,14 +9,13 @@ class Account(Record):
     Balance : int
 
 
-def generate_id(email) -> Principal:
-    generated = Principal.from_str(email)
-    ic.print(generated)
-    return generated
+def generate_id(id) -> Principal:
+    id = letters(id)
+    id = id * 10
+    gen_bytes = bytes([ord(c) for c in id[:29]])
+    generated_id = Principal.from_hex(gen_bytes.hex())
+  
+    return generated_id
     
-    # random_bytes = bytes(
-    #     [math.floor(_random.Random().random() * 256) for _ in range(29)]
-    # )
-    
-    # return Principal.from_hex(random_bytes.hex())
-    
+def letters(input):
+    return ''.join(filter(str.isalpha, input))

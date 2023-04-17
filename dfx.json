@@ -19,6 +19,16 @@
                 "output": "api/Canisters/Balance",
                 "node_compatibility": true
             }
+        },
+        "Claim": {
+            "type": "custom",
+            "build": "python3 -m kybra Balance src/claim/claim.py src/claim/claim.did",
+            "candid": "src/claim/claim.did",
+            "wasm": ".kybra/claim/claim.wasm.gz",
+            "declarations": {
+                "output": "api/Canisters/claim",
+                "node_compatibility": true
+            }
         }
     }
 }
