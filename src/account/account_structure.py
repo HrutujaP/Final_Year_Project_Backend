@@ -1,6 +1,4 @@
-from kybra import Record,Principal,ic
-import math
-import _random
+from kybra import Record,Principal
 
 class Account(Record):
     Id : Principal

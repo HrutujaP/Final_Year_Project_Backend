@@ -1,9 +1,15 @@
 from kybra import query, update,StableBTreeMap,Principal,ic,opt,nat
+
 from account_structure import Account,generate_id
 
 accounts = StableBTreeMap[Principal,Account](
     memory_id=0,max_key_size=1000,max_value_size=10000
 )
+
+claimed_accounts = StableBTreeMap[Principal,nat](
+    memory_id=1 ,max_key_size=1000,max_value_size=10000
+)
+
 
 @update
 def create_account(Name:str,email:str) -> opt[Principal]:
@@ -63,20 +69,30 @@ def get_balance(Id:Principal) -> nat:
         ic.print("Account not found")
         return None
 
+@update
+def claim_Tokens(Id:Principal) -> str:
+    if claimed_accounts.contains_key(Id):
+        message = "Account already claimed"
+       
+    else:
+        account = accounts.get(Id)
+        if account:
+            claimed_accounts.insert(Id,10000)
+            account["Balance"] += 10000
+            accounts.insert(Id,account)
+            message = "Account claimed"
+            
+        else:
+            message = "Invalid account"
+
+    ic.print(message)
+    return message
+
 
 @query
 def get_all_accounts() -> list[Principal]:
     return accounts.keys()
     
-
-class Claim():
-    @update
-    def claim_tokens(self,Id:Principal) -> str:
-        account = accounts.get(Id)
-        if account:
-            account["Balance"] += 10000
-            ic.print("Account claimed")
-            return "Account claimed"
-        else:
-            ic.print("Account not claimed")
-            return "Account not claimed"
+@query
+def get_claimed_accounts() -> list[Principal]:
+    return claimed_accounts.keys()
