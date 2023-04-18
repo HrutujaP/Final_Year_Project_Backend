@@ -13,6 +13,11 @@ source venv/bin/activate
 deactivate
 ```
 
+### To shut down wsl
+```
+wsl --shutdown
+```
+
 ## To run the project
 ### 1. Start DFX
 ```
