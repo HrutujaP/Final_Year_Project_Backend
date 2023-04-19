@@ -82,11 +82,9 @@ def create_storage(Rent:int, OwnerName:str, Path:str, TimePeriod:str, Space:int)
 @query
 def get_storage(Id:Principal) ->Async [opt[Storage]]:
     result :CanisterResult[opt[Storage]] =yield storage_canister.getAdvertisement(Id)
-    
-    ic.print(result)
     if result:
         ic.print("Storage account found")
-        return result
+        return result.ok
     else:
         ic.print("Storage account not found")
         return None
