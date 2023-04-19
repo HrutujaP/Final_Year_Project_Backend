@@ -1,15 +1,14 @@
-from kybra import query, update,StableBTreeMap,Principal,ic,opt,nat
+from kybra import query, update,StableBTreeMap,Principal,ic,opt,nat,CanisterResult,Async
 
 from account_structure import Account,generate_id
+from src.storage.types import Storage
 
 accounts = StableBTreeMap[Principal,Account](
     memory_id=0,max_key_size=1000,max_value_size=10000
 )
 
-claimed_accounts = StableBTreeMap[Principal,nat](
-    memory_id=1 ,max_key_size=1000,max_value_size=10000
-)
 
+storage_canister = Storage(Principal.from_str('r7inp-6aaaa-aaaaa-aaabq-cai'))
 
 @update
 def create_account(Name:str,email:str) -> opt[Principal]:
@@ -70,29 +69,29 @@ def get_balance(Id:Principal) -> nat:
         return None
 
 @update
-def claim_Tokens(Id:Principal) -> str:
-    if claimed_accounts.contains_key(Id):
-        message = "Account already claimed"
-       
+def create_storage(Rent:int, OwnerName:str, Path:str, TimePeriod:str, Space:int) ->Async [opt[Principal]]:
+    result :CanisterResult[opt[Principal]] =yield storage_canister.postAdvertisement(Rent, OwnerName, Path, TimePeriod, Space)
+    
+    if result.ok:
+        ic.print("Storage created")
+        return result.ok
     else:
-        account = accounts.get(Id)
-        if account:
-            claimed_accounts.insert(Id,10000)
-            account["Balance"] += 10000
-            accounts.insert(Id,account)
-            message = "Account claimed"
-            
-        else:
-            message = "Invalid account"
-
-    ic.print(message)
-    return message
-
+        ic.print("Storage not created")
+        return None
+    
+@query
+def get_storage(Id:Principal) ->Async [opt[Storage]]:
+    result :CanisterResult[opt[Storage]] =yield storage_canister.getAdvertisement(Id)
+    
+    ic.print(result)
+    if result:
+        ic.print("Storage account found")
+        return result
+    else:
+        ic.print("Storage account not found")
+        return None
 
 @query
 def get_all_accounts() -> list[Principal]:
     return accounts.keys()
     
-@query
-def get_claimed_accounts() -> list[Principal]:
-    return claimed_accounts.keys()

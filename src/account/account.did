@@ -1,9 +1,17 @@
+type Storage = record {
+  Space : int;
+  Path : text;
+  Rent : int;
+  RenterPrincipal : principal;
+  OwnerName : text;
+  TimePeriod : text;
+};
 service : () -> {
-  claim_Tokens : (principal) -> (text);
   create_account : (text, text) -> (opt principal);
+  create_storage : (int, text, text, text, int) -> (opt principal);
   delete_account : (principal) -> (opt text);
   get_account : (principal) -> (opt text) query;
   get_all_accounts : () -> (vec principal) query;
   get_balance : (principal) -> (nat) query;
-  get_claimed_accounts : () -> (vec principal) query;
+  get_storage : (principal) -> (opt Storage) query;
 }
