@@ -10,15 +10,16 @@
                 "node_compatibility": true
             }
         },
-        "Balance": {
+        "Storage": {
             "type": "custom",
-            "build": "python3 -m kybra Balance src/Balance/grantInitialBalance.py src/Balance/grantInitialBalance.did",
-            "candid": "src/Balance/grantInitialBalance.did",
-            "wasm": ".kybra/Balance/Balance.wasm.gz",
+            "build": "python3 -m kybra storage src/storage/storage.py src/storage/storage.did",
+            "candid": "src/storage/storage.did",
+            "wasm": ".kybra/storage/storage.wasm.gz",
             "declarations": {
-                "output": "api/Canisters/Balance",
+                "output": "api/Canisters/storage",
                 "node_compatibility": true
             }
         }
+   
     }
 }
