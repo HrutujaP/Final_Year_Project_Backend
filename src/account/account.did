@@ -7,11 +7,14 @@ type Storage = record {
   TimePeriod : text;
 };
 service : () -> {
+  add_rentee : (principal, principal) -> (opt principal);
   create_account : (text, text) -> (opt principal);
   create_storage : (int, text, text, text, int) -> (opt principal);
   delete_account : (principal) -> (opt text);
+  delete_storage : (principal) -> (opt text);
   get_account : (principal) -> (opt text) query;
   get_all_accounts : () -> (vec principal) query;
   get_balance : (principal) -> (nat) query;
   get_storage : (principal) -> (opt Storage) query;
+  remove_rentee : (principal) -> (opt principal);
 }

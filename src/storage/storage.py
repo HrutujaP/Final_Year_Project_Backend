@@ -51,7 +51,7 @@ def addRentee(Id:Principal, RenterPrincipal:Principal) -> opt[Principal]:
         if storage:
             ic.print("Advertisement found")
             storage["RenterPrincipal"] = RenterPrincipal
-            ic.print("Rentee Added!!")
+            ic.print( storage["RenterPrincipal"])
             return storage["RenterPrincipal"]
         else:
             ic.print("Advertisement not found")

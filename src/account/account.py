@@ -8,7 +8,7 @@ accounts = StableBTreeMap[Principal,Account](
 )
 
 
-storage_canister = Storage(Principal.from_str('r7inp-6aaaa-aaaaa-aaabq-cai'))
+storage_canister = Storage(Principal.from_str('ryjl3-tyaaa-aaaaa-aaaba-cai'))
 
 @update
 def create_account(Name:str,email:str) -> opt[Principal]:
@@ -74,11 +74,42 @@ def create_storage(Rent:int, OwnerName:str, Path:str, TimePeriod:str, Space:int)
     
     if result.ok:
         ic.print("Storage created")
+        ic.print(result)
         return result.ok
     else:
         ic.print("Storage not created")
         return None
+ 
+@update
+def delete_storage(Id:Principal) ->Async [opt[str]]:
+    result :CanisterResult[opt[str]] =yield storage_canister.deleteAdvertisement(Id)
+    if result:
+        ic.print("Storage deleted")
+        return result.ok
+    else:
+        ic.print("Storage not deleted")
+        return None
     
+@update
+def add_rentee(StorageId:Principal, RenterPrincipal:Principal) ->Async [opt[Principal]]:
+    result :CanisterResult[opt[Principal]] =yield storage_canister.addRentee(StorageId,RenterPrincipal)
+    if result:
+        ic.print("Rentee Added!!")
+        return result.ok
+    else:
+        ic.print("Rentee not added")
+        return None
+    
+@update
+def remove_rentee(StorageId:Principal) ->Async [opt[Principal]]:
+    result :CanisterResult[opt[Principal]] =yield storage_canister.removeRentee(StorageId)
+    if result:
+        ic.print("Rentee Removed!!")
+        return result.ok
+    else:
+        ic.print("Rentee not removed")
+        return None
+       
 @query
 def get_storage(Id:Principal) ->Async [opt[Storage]]:
     result :CanisterResult[opt[Storage]] =yield storage_canister.getAdvertisement(Id)
