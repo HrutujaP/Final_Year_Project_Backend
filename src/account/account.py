@@ -18,7 +18,9 @@ def create_account(Name:str,email:str) -> opt[Principal]:
         "Id" : Id,
         "Name" : Name,
         "Email" : email,
-        "Balance" : 0
+        "Balance" : 0,
+        "My_Storages" : [],
+        "Rented_Storages" : []
     }
     
     if not accounts.contains_key(Id):
@@ -69,12 +71,14 @@ def get_balance(Id:Principal) -> nat:
         return None
 
 @update
-def create_storage(Rent:int, OwnerName:str, Path:str, TimePeriod:str, Space:int) ->Async [opt[Principal]]:
-    result :CanisterResult[opt[Principal]] =yield storage_canister.postAdvertisement(Rent, OwnerName, Path, TimePeriod, Space)
-    
+def create_storage(Rent:int, OwnerPrincipal:Principal, Path:str, TimePeriod:str, Space:int) ->Async [opt[Principal]]:
+    result :CanisterResult[opt[Principal]] =yield storage_canister.postAdvertisement(Rent, OwnerPrincipal, Path, TimePeriod, Space)
+    account = accounts.get(OwnerPrincipal)
     if result.ok:
-        ic.print("Storage created")
         ic.print(result)
+        account["My_Storages"].append(result.ok)
+        accounts.insert(OwnerPrincipal,account)
+        ic.print("Storage created And Added Successfully")
         return result.ok
     else:
         ic.print("Storage not created")
@@ -83,7 +87,12 @@ def create_storage(Rent:int, OwnerName:str, Path:str, TimePeriod:str, Space:int)
 @update
 def delete_storage(Id:Principal) ->Async [opt[str]]:
     result :CanisterResult[opt[str]] =yield storage_canister.deleteAdvertisement(Id)
+    storage = storage_canister.getAdvertisement(Id)
+    owner = storage["OwnerPrincipal"]
+    account = accounts.get(owner)
     if result:
+        account["My_Storages"].remove(Id)
+        accounts.insert(owner,account)
         ic.print("Storage deleted")
         return result.ok
     else:

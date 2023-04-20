@@ -1,9 +1,9 @@
-from kybra import Record,Principal
+from kybra import Record,Principal,opt
 
 class Storage(Record):
-    RenterPrincipal : Principal
+    RenterPrincipal : opt[Principal]
     Rent : int
-    OwnerName : str
+    OwnerPrincipal : Principal
     Path : str
     Space: int
     TimePeriod : str

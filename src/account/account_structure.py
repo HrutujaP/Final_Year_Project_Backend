@@ -5,6 +5,8 @@ class Account(Record):
     Name : str
     Email : str
     Balance : int
+    My_Storages : list[Principal]
+    Rented_Storages : list[Principal]
 
 
 def generate_id(id) -> Principal:

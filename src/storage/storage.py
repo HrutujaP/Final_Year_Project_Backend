@@ -7,13 +7,13 @@ storages = StableBTreeMap[Principal,Storage](
 )
 
 @update
-def postAdvertisement(Rent:int, OwnerName:str, Path:str, TimePeriod:str, Space:int) -> opt[Principal]:
-    adId = generate_id(Path+TimePeriod+OwnerName)
+def postAdvertisement(Rent:int, OwnerPrincipal:Principal, Path:str, TimePeriod:str, Space:int) -> opt[Principal]:
+    adId = generate_id(Path+TimePeriod)
     newAdvertisement : Storage = {
         "Rent" : Rent,
-        "OwnerName" : OwnerName,
+        "OwnerPrincipal" : OwnerPrincipal,
         "Path" : Path,
-        "RenterPrincipal" : generate_id("OwnerPrincipalId"),
+        "RenterPrincipal" : None,
         "TimePeriod" : TimePeriod,
         "Space" : Space
     }
