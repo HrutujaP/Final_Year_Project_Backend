@@ -1,20 +1,32 @@
+type Account = record {
+  Id : principal;
+  Email : text;
+  Rented_Storages : vec principal;
+  Name : text;
+  My_Storages : vec principal;
+  Balance : int;
+};
 type Storage = record {
+  Id : principal;
   Space : int;
   Path : text;
   Rent : int;
-  RenterPrincipal : principal;
-  OwnerName : text;
+  RenterPrincipal : opt principal;
+  RenteeDuration : opt text;
   TimePeriod : text;
+  OwnerPrincipal : principal;
 };
 service : () -> {
-  add_rentee : (principal, principal) -> (opt principal);
+  add_balance : (principal, nat) -> (nat);
+  add_rentee : (principal, principal, text) -> (opt principal);
   create_account : (text, text) -> (opt principal);
-  create_storage : (int, text, text, text, int) -> (opt principal);
+  create_storage : (int, principal, text, text, int) -> (opt Storage);
   delete_account : (principal) -> (opt text);
   delete_storage : (principal) -> (opt text);
-  get_account : (principal) -> (opt text) query;
+  get_account : (principal) -> (opt Account) query;
   get_all_accounts : () -> (vec principal) query;
   get_balance : (principal) -> (nat) query;
   get_storage : (principal) -> (opt Storage) query;
-  remove_rentee : (principal) -> (opt principal);
+  remove_rentee : (principal, principal) -> (opt text);
+  withdraw_balance : (principal, nat) -> (nat);
 }

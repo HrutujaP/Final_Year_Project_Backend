@@ -1,9 +1,11 @@
 from kybra import Record,Principal,opt
 
 class Storage(Record):
+    Id : Principal
     RenterPrincipal : opt[Principal]
     Rent : int
     OwnerPrincipal : Principal
+    RenteeDuration : opt[str]
     Path : str
     Space: int
     TimePeriod : str

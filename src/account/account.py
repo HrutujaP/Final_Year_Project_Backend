@@ -18,7 +18,7 @@ def create_account(Name:str,email:str) -> opt[Principal]:
         "Id" : Id,
         "Name" : Name,
         "Email" : email,
-        "Balance" : 0,
+        "Balance" : 100,
         "My_Storages" : [],
         "Rented_Storages" : []
     }
@@ -51,11 +51,11 @@ def delete_account(Id:Principal) -> opt[str]:
         
 
 @query
-def get_account(Id:Principal) -> opt[str]:
+def get_account(Id:Principal) -> opt[Account]:
     account = accounts.get(Id)
     if account:
         ic.print("Account found")
-        return account["Name"]
+        return account
     else:
         ic.print("Account not found")
         return None
@@ -71,12 +71,43 @@ def get_balance(Id:Principal) -> nat:
         return None
 
 @update
-def create_storage(Rent:int, OwnerPrincipal:Principal, Path:str, TimePeriod:str, Space:int) ->Async [opt[Principal]]:
-    result :CanisterResult[opt[Principal]] =yield storage_canister.postAdvertisement(Rent, OwnerPrincipal, Path, TimePeriod, Space)
+def add_balance(Id:Principal, amount:nat) -> nat:
+    account = accounts.get(Id)
+    if account:
+        ic.print("Account found")
+        account["Balance"] += amount
+        accounts.insert(Id,account)
+        ic.print("Balance added")
+        return account["Balance"]
+    else:
+        ic.print("Account not found")
+        return None
+
+@update
+def withdraw_balance(Id:Principal, amount:nat) -> nat:
+    account = accounts.get(Id)
+    if account:
+        ic.print("Account found")
+        if account["Balance"] >= amount:
+            account["Balance"] -= amount
+            accounts.insert(Id,account)
+            ic.print("Balance withdrawn")
+            return account["Balance"]
+        else:
+            ic.print("Not enough balance")
+            return account["Balance"]
+    else:
+        ic.print("Account not found")
+        return None
+
+@update
+def create_storage(Rent:int, OwnerPrincipal:Principal, Path:str, TimePeriod:str, Space:int) ->Async [opt[Storage]]:
+    result :CanisterResult[opt[Storage]] = yield storage_canister.postAdvertisement(Rent, OwnerPrincipal, Path, TimePeriod, Space)
     account = accounts.get(OwnerPrincipal)
     if result.ok:
-        ic.print(result)
-        account["My_Storages"].append(result.ok)
+        ic.print(result.ok)
+        storage = result.ok
+        account["My_Storages"].append(storage["OwnerPrincipal"])
         accounts.insert(OwnerPrincipal,account)
         ic.print("Storage created And Added Successfully")
         return result.ok
@@ -86,9 +117,16 @@ def create_storage(Rent:int, OwnerPrincipal:Principal, Path:str, TimePeriod:str,
  
 @update
 def delete_storage(Id:Principal) ->Async [opt[str]]:
-    result :CanisterResult[opt[str]] =yield storage_canister.deleteAdvertisement(Id)
     storage = storage_canister.getAdvertisement(Id)
+    result :CanisterResult[opt[str]] =yield storage_canister.deleteAdvertisement(Id)
     owner = storage["OwnerPrincipal"]
+    renter = storage["RenterPrincipal"]
+    
+    if renter:
+        account = accounts.get(renter)
+        account["Rented_Storages"].remove(Id)
+        accounts.insert(renter,account)
+    
     account = accounts.get(owner)
     if result:
         account["My_Storages"].remove(Id)
@@ -100,9 +138,12 @@ def delete_storage(Id:Principal) ->Async [opt[str]]:
         return None
     
 @update
-def add_rentee(StorageId:Principal, RenterPrincipal:Principal) ->Async [opt[Principal]]:
-    result :CanisterResult[opt[Principal]] =yield storage_canister.addRentee(StorageId,RenterPrincipal)
+def add_rentee(StorageId:Principal, RenterPrincipal:Principal,duration:str) ->Async [opt[Principal]]:
+    result :CanisterResult[opt[Principal]] =yield storage_canister.addRentee(StorageId,RenterPrincipal,duration)
     if result:
+        account = accounts.get(RenterPrincipal)
+        account["Rented_Storages"].append(StorageId)
+        accounts.insert(RenterPrincipal,account)
         ic.print("Rentee Added!!")
         return result.ok
     else:
@@ -110,9 +151,12 @@ def add_rentee(StorageId:Principal, RenterPrincipal:Principal) ->Async [opt[Prin
         return None
     
 @update
-def remove_rentee(StorageId:Principal) ->Async [opt[Principal]]:
+def remove_rentee(StorageId:Principal,RenterPrincipal:Principal) ->Async [opt[str]]:
     result :CanisterResult[opt[Principal]] =yield storage_canister.removeRentee(StorageId)
     if result:
+        account = accounts.get(RenterPrincipal)
+        account["Rented_Storages"].remove(StorageId)
+        accounts.insert(RenterPrincipal,account)
         ic.print("Rentee Removed!!")
         return result.ok
     else:
@@ -122,7 +166,7 @@ def remove_rentee(StorageId:Principal) ->Async [opt[Principal]]:
 @query
 def get_storage(Id:Principal) ->Async [opt[Storage]]:
     result :CanisterResult[opt[Storage]] =yield storage_canister.getAdvertisement(Id)
-    if result:
+    if result.ok:
         ic.print("Storage account found")
         return result.ok
     else:
