@@ -16,6 +16,10 @@ type Storage = record {
   TimePeriod : text;
   OwnerPrincipal : principal;
 };
+type Storages = record {
+  Rented_Storages : vec principal;
+  My_Storages : vec principal;
+};
 service : () -> {
   add_balance : (principal, nat) -> (nat);
   add_rentee : (principal, principal, text) -> (opt principal);
@@ -25,6 +29,7 @@ service : () -> {
   delete_storage : (principal) -> (opt text);
   get_account : (principal) -> (opt Account) query;
   get_all_accounts : () -> (vec principal) query;
+  get_all_storages : (principal) -> (opt Storages) query;
   get_balance : (principal) -> (nat) query;
   get_storage : (principal) -> (opt Storage) query;
   remove_rentee : (principal, principal) -> (opt text);

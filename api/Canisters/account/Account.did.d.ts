@@ -19,6 +19,10 @@ export interface Storage {
   'TimePeriod' : string,
   'OwnerPrincipal' : Principal,
 }
+export interface Storages {
+  'Rented_Storages' : Array<Principal>,
+  'My_Storages' : Array<Principal>,
+}
 export interface _SERVICE {
   'add_balance' : ActorMethod<[Principal, bigint], bigint>,
   'add_rentee' : ActorMethod<[Principal, Principal, string], [] | [Principal]>,
@@ -31,6 +35,7 @@ export interface _SERVICE {
   'delete_storage' : ActorMethod<[Principal], [] | [string]>,
   'get_account' : ActorMethod<[Principal], [] | [Account]>,
   'get_all_accounts' : ActorMethod<[], Array<Principal>>,
+  'get_all_storages' : ActorMethod<[Principal], [] | [Storages]>,
   'get_balance' : ActorMethod<[Principal], bigint>,
   'get_storage' : ActorMethod<[Principal], [] | [Storage]>,
   'remove_rentee' : ActorMethod<[Principal, Principal], [] | [string]>,

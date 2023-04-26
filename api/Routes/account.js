@@ -46,4 +46,46 @@ router.get('/get_accounts', async (req, res) => {
     }
 });
 
+
+router.get('/get_account',async (req, res) => {
+    try{
+        const { account_principal } = req.body;
+        console.log(account_principal);
+        const principal = Principal.fromText(account_principal);
+        var result = await accountActor.get_account(principal);
+        result = result[0];
+
+        var rented_storages = result.Rented_Storages;
+        var my_storages = result.My_Storages;
+
+        rented_storages = rented_storages.map((storage) => {
+            const principal = Principal.fromUint8Array(storage._arr);
+            return principal.toText();
+            
+        });
+        
+        my_storages = my_storages.map((storage) => {
+            const principal = Principal.fromUint8Array(storage._arr);
+            return principal.toText();
+        });
+
+        result['Rented_Storages'] = rented_storages;
+        result['My_Storages'] = my_storages;
+        result["Id"] = account_principal
+
+        result = JSON.parse(JSON.stringify(result, (key, value) =>
+        typeof value === 'bigint'
+            ? value.toString()
+            : value // return everything else unchanged
+        ));
+
+        res.send(result);
+        
+    }catch(err){
+        console.log(err);
+        res.send(err);
+    }
+
+});
+
 export default router;

@@ -1,6 +1,6 @@
 from kybra import query, update,StableBTreeMap,Principal,ic,opt,nat,CanisterResult,Async
 
-from account_structure import Account,generate_id
+from account_structure import Account,generate_id,Storages
 from src.storage.types import Storage
 
 accounts = StableBTreeMap[Principal,Account](
@@ -107,7 +107,7 @@ def create_storage(Rent:int, OwnerPrincipal:Principal, Path:str, TimePeriod:str,
     if result.ok:
         ic.print(result.ok)
         storage = result.ok
-        account["My_Storages"].append(storage["OwnerPrincipal"])
+        account["My_Storages"].append(storage["Id"])
         accounts.insert(OwnerPrincipal,account)
         ic.print("Storage created And Added Successfully")
         return result.ok
@@ -172,6 +172,23 @@ def get_storage(Id:Principal) ->Async [opt[Storage]]:
     else:
         ic.print("Storage account not found")
         return None
+
+@query
+def get_all_storages(Id:Principal) -> opt[Storages]:
+    account = accounts.get(Id)
+    rented_storages_id = account["Rented_Storages"]
+    my_storages_id = account["My_Storages"]
+    
+    account_storages : Storages = {
+        "Rented_Storages" : rented_storages_id,
+        "My_Storages" : my_storages_id
+    }
+    
+    if account:
+        return account_storages
+    else:
+        return None
+    
 
 @query
 def get_all_accounts() -> list[Principal]:

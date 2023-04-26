@@ -17,6 +17,10 @@ export const idlFactory = ({ IDL }) => {
     'My_Storages' : IDL.Vec(IDL.Principal),
     'Balance' : IDL.Int,
   });
+  const Storages = IDL.Record({
+    'Rented_Storages' : IDL.Vec(IDL.Principal),
+    'My_Storages' : IDL.Vec(IDL.Principal),
+  });
   return IDL.Service({
     'add_balance' : IDL.Func([IDL.Principal, IDL.Nat], [IDL.Nat], []),
     'add_rentee' : IDL.Func(
@@ -38,6 +42,11 @@ export const idlFactory = ({ IDL }) => {
     'delete_storage' : IDL.Func([IDL.Principal], [IDL.Opt(IDL.Text)], []),
     'get_account' : IDL.Func([IDL.Principal], [IDL.Opt(Account)], ['query']),
     'get_all_accounts' : IDL.Func([], [IDL.Vec(IDL.Principal)], ['query']),
+    'get_all_storages' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Opt(Storages)],
+        ['query'],
+      ),
     'get_balance' : IDL.Func([IDL.Principal], [IDL.Nat], ['query']),
     'get_storage' : IDL.Func([IDL.Principal], [IDL.Opt(Storage)], ['query']),
     'remove_rentee' : IDL.Func(

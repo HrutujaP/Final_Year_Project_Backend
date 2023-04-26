@@ -16,6 +16,11 @@ def generate_id(id) -> Principal:
     generated_id = Principal.from_hex(gen_bytes.hex())
   
     return generated_id
+
+class Storages(Record):
+    My_Storages : list[Principal]
+    Rented_Storages : list[Principal]
+    
     
 def letters(input):
     return ''.join(filter(str.isalpha, input))
