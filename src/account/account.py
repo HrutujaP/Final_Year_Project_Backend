@@ -155,7 +155,13 @@ def remove_rentee(StorageId:Principal,RenterPrincipal:Principal) ->Async [opt[st
     result :CanisterResult[opt[Principal]] =yield storage_canister.removeRentee(StorageId)
     if result:
         account = accounts.get(RenterPrincipal)
-        account["Rented_Storages"].remove(StorageId)
+        ic.print(account["Rented_Storages"])
+        ic.print(StorageId)
+        storages = account["Rented_Storages"]
+        storages.remove(StorageId)
+        account["Rented_Storages"] = storages
+        
+        # account["Rented_Storages"].remove(StorageId)
         accounts.insert(RenterPrincipal,account)
         ic.print("Rentee Removed!!")
         return result.ok
