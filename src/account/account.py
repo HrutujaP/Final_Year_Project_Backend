@@ -117,24 +117,30 @@ def create_storage(Rent:int, OwnerPrincipal:Principal, Path:str, TimePeriod:str,
  
 @update
 def delete_storage(Id:Principal) ->Async [opt[str]]:
-    storage = storage_canister.getAdvertisement(Id)
-    result :CanisterResult[opt[str]] =yield storage_canister.deleteAdvertisement(Id)
-    owner = storage["OwnerPrincipal"]
-    renter = storage["RenterPrincipal"]
-    
-    if renter:
-        account = accounts.get(renter)
-        account["Rented_Storages"].remove(Id)
-        accounts.insert(renter,account)
-    
-    account = accounts.get(owner)
-    if result:
-        account["My_Storages"].remove(Id)
-        accounts.insert(owner,account)
-        ic.print("Storage deleted")
-        return result.ok
+    storage :CanisterResult[opt[Storage]] = yield storage_canister.getAdvertisement(Id)
+    ic.print(storage)
+    if storage.ok is not None: 
+        storage = storage.ok
+        result :CanisterResult[opt[str]] =yield storage_canister.deleteAdvertisement(Id)
+        owner = storage["OwnerPrincipal"]
+        renter = storage["RenterPrincipal"]
+        
+        if renter:
+            account = accounts.get(renter)
+            account["Rented_Storages"].remove(Id)
+            accounts.insert(renter,account)
+        
+        if result:
+            account = accounts.get(owner)
+            account["My_Storages"].remove(Id)
+            accounts.insert(owner,account)
+            ic.print("Storage deleted")
+            return result.ok
+        else:
+            ic.print("Storage not deleted")
+            return None
     else:
-        ic.print("Storage not deleted")
+        ic.print("Storage not found")
         return None
     
 @update
@@ -152,18 +158,19 @@ def add_rentee(StorageId:Principal, RenterPrincipal:Principal,duration:str) ->As
     
 @update
 def remove_rentee(StorageId:Principal,RenterPrincipal:Principal) ->Async [opt[str]]:
-    result :CanisterResult[opt[Principal]] =yield storage_canister.removeRentee(StorageId)
+    result :CanisterResult[opt[str]] =yield storage_canister.removeRentee(StorageId)
     if result:
-        account = accounts.get(RenterPrincipal)
-        ic.print(account["Rented_Storages"])
-        ic.print(StorageId)
-        storages = account["Rented_Storages"]
-        storages.remove(StorageId)
-        account["Rented_Storages"] = storages
-        
-        # account["Rented_Storages"].remove(StorageId)
-        accounts.insert(RenterPrincipal,account)
-        ic.print("Rentee Removed!!")
+        try:
+            account = accounts.get(RenterPrincipal)
+            storages = account["Rented_Storages"]
+            storages = [str(i) for i in storages]
+            StorageId = str(StorageId)
+            storages.remove(StorageId)
+            storages = [Principal.from_str(i) for i in storages]
+            account["Rented_Storages"] = storages
+            accounts.insert(RenterPrincipal,account)
+        except KeyError:
+            return "Rentee not found"
         return result.ok
     else:
         ic.print("Rentee not removed")

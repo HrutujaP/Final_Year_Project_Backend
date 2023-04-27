@@ -282,4 +282,42 @@ router.post('/remove_rentee', async (req, res) => {
     }
 });
 
+
+// router.post('/delete_account', async (req, res) => {
+//     try{
+
+//     }catch (err){
+//         console.log(err);
+//         res.send(err);
+//     }
+// });
+
+router.get('/get_balance', async (req, res) => {
+    try{
+        const { account_principal } = req.body;
+        const principal = Principal.fromText(account_principal);
+        const result = await accountActor.get_balance(principal);
+        console.log(result);
+        res.send({balance:result.toString()});
+    }catch(err){
+        console.log(err);
+        res.send(err);
+    }
+});
+
+
+router.post('/delete_storage', async (req, res) => {
+    try{
+        const { storage_principal } = req.body;
+        const principal = Principal.fromText(storage_principal);
+        const result = await accountActor.delete_storage(principal);
+        console.log(result);
+        res.send({status:"success"});
+
+    }catch (err){
+        console.log(err);
+        res.send(err);
+    }
+});
+
 export default router;
