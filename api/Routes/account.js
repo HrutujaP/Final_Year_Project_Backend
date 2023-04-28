@@ -7,8 +7,8 @@ import { agent } from '../agent.js';
 
 var router = express.Router();
 
-const accountActor = Actor.createActor(idlFactory, { agent, canisterId: Principal.fromText('rrkah-fqaaa-aaaaa-aaaaq-cai') });
-// const accountActor = Actor.createActor(idlFactory, { agent, canisterId: Principal.fromText('yvrmz-eaaaa-aaaao-aifqq-cai') });
+// const accountActor = Actor.createActor(idlFactory, { agent, canisterId: Principal.fromText('rrkah-fqaaa-aaaaa-aaaaq-cai') });
+const accountActor = Actor.createActor(idlFactory, { agent, canisterId: Principal.fromText('yvrmz-eaaaa-aaaao-aifqq-cai') });
 
 /* This code defines a route for creating a new account using the POST method. It expects the request
 body to contain a JSON object with `name` and `email` properties. It then calls the `create_account`
@@ -71,7 +71,7 @@ and `principal.toText` methods. Finally, it sends back an object containing the 
 response. If an error occurs, it logs the error and sends it back as a response. */
 router.get('/get_account',async (req, res) => {
     try{
-        const { account_principal } = req.body;
+        const account_principal= req.query.account_principal.toString();
         const principal = Principal.fromText(account_principal);
         var result = await accountActor.get_account(principal);
         result = result[0];
@@ -187,7 +187,7 @@ containing the storage details as a response. If an error occurs, it logs the er
 back as a response. */
 router.get('/get_storage',async (req, res) => {
     try{
-        const { storage_principal } = req.body;
+        const storage_principal = req.query.storage_principal.toString();
         const principal = Principal.fromText(storage_principal);
         var result = await accountActor.get_storage(principal);
         result = result[0];
@@ -224,6 +224,7 @@ router.post('/create_storage', async (req, res) => {
         var principal = Principal.fromText(owner_principal);
         var result = await accountActor.create_storage(BigInt(rent),principal,path,timeperiod,BigInt(storage_size));
         result = result[0];
+        console.log(result);
         var storage_principal = Principal.fromUint8Array(result.Id._arr).toText();
         result["Id"] = storage_principal;
         
