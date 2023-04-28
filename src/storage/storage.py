@@ -1,6 +1,6 @@
 from kybra import query, update,StableBTreeMap,Principal,ic,opt,nat,null
 
-from storage_structure import Storage, generate_id
+from storage_structure import Storage,generate_id
 
 storages = StableBTreeMap[Principal,Storage](
     memory_id=0,max_key_size=1000,max_value_size=10000
@@ -8,7 +8,7 @@ storages = StableBTreeMap[Principal,Storage](
 
 @update
 def postAdvertisement(Rent:int, OwnerPrincipal:Principal, Path:str, TimePeriod:str, Space:int) -> opt[Storage]:
-    adId = generate_id(Path+TimePeriod+str(OwnerPrincipal))
+    adId = generate_id(Path)
     newAdvertisement : Storage = {
         "Id" : adId,
         "Rent" : Rent,
@@ -20,6 +20,7 @@ def postAdvertisement(Rent:int, OwnerPrincipal:Principal, Path:str, TimePeriod:s
         "Space" : Space
     }
     
+    
     if not storages.contains_key(adId):
         storage = storages.insert(adId, newAdvertisement)
         if storage:
@@ -30,7 +31,7 @@ def postAdvertisement(Rent:int, OwnerPrincipal:Principal, Path:str, TimePeriod:s
             return None
     else:
         ic.print("Advertisement already exists")
-        return storages.get(adId)
+        return None
 #   h3fdq-ulnmn-5gi5t-wnzsg-2ytdn-z5hm3-ldpjs-hm5to-mrwwe-y3opj-3g2  
 @update
 def deleteAdvertisement(Id:Principal) -> opt[str]:

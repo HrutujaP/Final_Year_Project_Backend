@@ -1,4 +1,4 @@
-from kybra import Record,Principal,opt
+from kybra import Record,Principal,opt,ic
 
 class Storage(Record):
     Id : Principal
@@ -11,14 +11,12 @@ class Storage(Record):
     TimePeriod : str
     
 def generate_id(id) -> Principal:
-    id = letters(id)
-    id = id * 10
-    gen_bytes = bytes([ord(c) for c in id[:29]])
-    generated_id = Principal.from_hex(gen_bytes.hex())
+    id = letters(id) * 29
+    ord_list = [ord(c) for c in id[:29]]
+    generated_id = Principal.from_hex(bytes(ord_list).hex())
   
     return generated_id
 
-    
 def letters(input):
     return ''.join(filter(str.isalpha, input))
     

@@ -104,6 +104,7 @@ def withdraw_balance(Id:Principal, amount:nat) -> nat:
 def create_storage(Rent:int, OwnerPrincipal:Principal, Path:str, TimePeriod:str, Space:int) ->Async [opt[Storage]]:
     result :CanisterResult[opt[Storage]] = yield storage_canister.postAdvertisement(Rent, OwnerPrincipal, Path, TimePeriod, Space)
     account = accounts.get(OwnerPrincipal)
+    
     if result.ok:
         ic.print(result.ok)
         storage = result.ok
@@ -113,7 +114,7 @@ def create_storage(Rent:int, OwnerPrincipal:Principal, Path:str, TimePeriod:str,
         return result.ok
     else:
         ic.print("Storage not created")
-        return None
+        return result.err
  
 @update
 def delete_storage(Id:Principal) ->Async [opt[str]]:

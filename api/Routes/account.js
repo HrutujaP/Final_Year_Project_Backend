@@ -7,8 +7,8 @@ import { agent } from '../agent.js';
 
 var router = express.Router();
 
-// const accountActor = Actor.createActor(idlFactory, { agent, canisterId: Principal.fromText('rrkah-fqaaa-aaaaa-aaaaq-cai') });
-const accountActor = Actor.createActor(idlFactory, { agent, canisterId: Principal.fromText('yvrmz-eaaaa-aaaao-aifqq-cai') });
+const accountActor = Actor.createActor(idlFactory, { agent, canisterId: Principal.fromText('rrkah-fqaaa-aaaaa-aaaaq-cai') });
+// const accountActor = Actor.createActor(idlFactory, { agent, canisterId: Principal.fromText('yvrmz-eaaaa-aaaao-aifqq-cai') });
 
 /* This code defines a route for creating a new account using the POST method. It expects the request
 body to contain a JSON object with `name` and `email` properties. It then calls the `create_account`
@@ -225,18 +225,23 @@ router.post('/create_storage', async (req, res) => {
         var result = await accountActor.create_storage(BigInt(rent),principal,path,timeperiod,BigInt(storage_size));
         result = result[0];
         console.log(result);
-        var storage_principal = Principal.fromUint8Array(result.Id._arr).toText();
-        result["Id"] = storage_principal;
-        
-        var owener_principal = Principal.fromUint8Array(result.OwnerPrincipal._arr);
-        result["OwnerPrincipal"] = owener_principal.toText();
-        result = JSON.parse(JSON.stringify(result, (key, value) =>
-            typeof value === 'bigint'
-                ? value.toString()
-                : value // return everything else unchanged
-        ));
-        console.log(result);
-        res.send(result);
+        if(result != null){
+
+            var storage_principal = Principal.fromUint8Array(result.Id._arr).toText();
+            result["Id"] = storage_principal;
+            
+            var owener_principal = Principal.fromUint8Array(result.OwnerPrincipal._arr);
+            result["OwnerPrincipal"] = owener_principal.toText();
+            result = JSON.parse(JSON.stringify(result, (key, value) =>
+                typeof value === 'bigint'
+                    ? value.toString()
+                    : value // return everything else unchanged
+            ));
+            console.log(result);
+            res.send(result);
+        }else{
+            res.send(result);
+        }
     }catch(err){
         console.log(err);
         res.send(err);
