@@ -31,7 +31,7 @@ def postAdvertisement(Rent:int, OwnerPrincipal:Principal, Path:str, TimePeriod:s
             return None
     else:
         ic.print("Advertisement already exists")
-        return None
+        return storages.get(adId)
 #   h3fdq-ulnmn-5gi5t-wnzsg-2ytdn-z5hm3-ldpjs-hm5to-mrwwe-y3opj-3g2  
 @update
 def deleteAdvertisement(Id:Principal) -> opt[str]:
