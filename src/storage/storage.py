@@ -3,7 +3,7 @@ from kybra import query, update,StableBTreeMap,Principal,ic,opt,nat,null
 from storage_structure import Storage,generate_id
 
 storages = StableBTreeMap[Principal,Storage](
-    memory_id=0,max_key_size=1000,max_value_size=10000
+    memory_id=1,max_key_size=1000,max_value_size=10000
 )
 
 @update
