@@ -22,7 +22,7 @@ export const idlFactory = ({ IDL }) => {
     'My_Storages' : IDL.Vec(IDL.Principal),
   });
   return IDL.Service({
-    'add_balance' : IDL.Func([IDL.Principal, IDL.Nat], [IDL.Nat], []),
+    'add_balance' : IDL.Func([IDL.Principal, IDL.Nat], [IDL.Opt(IDL.Nat)], []),
     'add_rentee' : IDL.Func(
         [IDL.Principal, IDL.Principal, IDL.Text],
         [IDL.Opt(IDL.Principal)],
@@ -54,7 +54,11 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Opt(IDL.Text)],
         [],
       ),
-    'withdraw_balance' : IDL.Func([IDL.Principal, IDL.Nat], [IDL.Nat], []),
+    'withdraw_balance' : IDL.Func(
+        [IDL.Principal, IDL.Nat],
+        [IDL.Opt(IDL.Nat)],
+        [],
+      ),
   });
 };
 export const init = ({ IDL }) => { return []; };

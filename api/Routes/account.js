@@ -76,6 +76,11 @@ router.get('/get_account',async (req, res) => {
         var result = await accountActor.get_account(principal);
         result = result[0];
 
+        if(result == null){
+            res.send("Account not found");
+            return;
+        }
+
         var rented_storages = result.Rented_Storages;
         var my_storages = result.My_Storages;
 
@@ -165,9 +170,15 @@ router.post('/withdraw_balance', async (req, res) => {
     try{
         const { account_principal, amount } = req.body;
         const principal = Principal.fromText(account_principal);
-        const result = await accountActor.withdraw_balance(principal, BigInt(amount));
-        console.log(result);
-        res.send({updated_balance:result.toString()});
+        var result = await accountActor.withdraw_balance(principal, BigInt(amount));
+        result = result[0];
+        // console.log(result);
+        if(result != null){
+
+            res.send({updated_balance:result.toString()});
+        }else{
+            res.send({updated_balance:"Account not found"});
+        }
 
     }catch(err){
         console.log(err);
@@ -195,6 +206,12 @@ router.get('/get_storage',async (req, res) => {
         result["Id"] = storage_principal
         var owener_principal = Principal.fromUint8Array(result.OwnerPrincipal._arr);
         result["OwnerPrincipal"] = owener_principal.toText();
+        var renter = result["RenterPrincipal"];
+        renter = renter[0];
+        if(renter != null){
+            var renter_principal = Principal.fromUint8Array(renter._arr);
+            result["RenterPrincipal"] = renter_principal.toText();
+        }
 
         result = JSON.parse(JSON.stringify(result, (key, value) =>
         typeof value === 'bigint'

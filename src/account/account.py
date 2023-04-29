@@ -71,7 +71,7 @@ def get_balance(Id:Principal) -> nat:
         return None
 
 @update
-def add_balance(Id:Principal, amount:nat) -> nat:
+def add_balance(Id:Principal, amount:nat) -> opt[nat]:
     account = accounts.get(Id)
     if account:
         ic.print("Account found")
@@ -84,7 +84,7 @@ def add_balance(Id:Principal, amount:nat) -> nat:
         return None
 
 @update
-def withdraw_balance(Id:Principal, amount:nat) -> nat:
+def withdraw_balance(Id:Principal, amount:nat) -> opt[nat]:
     account = accounts.get(Id)
     if account:
         ic.print("Account found")
@@ -128,18 +128,27 @@ def delete_storage(Id:Principal) ->Async [opt[str]]:
         
         if renter:
             account = accounts.get(renter)
-            account["Rented_Storages"].remove(Id)
-            accounts.insert(renter,account)
+            storages = account["Rented_Storages"]
+            StorageId = str(storage["Id"])
+            storages = [i for i in storages if str(i) != StorageId]
+            account["Rented_Storages"] = [Principal.from_str(str(i)) for i in storages]
+            accounts.insert(renter, account)
         
         if result:
             account = accounts.get(owner)
-            account["My_Storages"].remove(Id)
-            accounts.insert(owner,account)
-            ic.print("Storage deleted")
+            storages = account["My_Storages"]
+            StorageId = str(storage["Id"])
+            storages = [i for i in storages if str(i) != StorageId]
+            account["My_Storages"] = [Principal.from_str(str(i)) for i in storages]
+            accounts.insert(owner, account)
+        
             return result.ok
+            
         else:
             ic.print("Storage not deleted")
             return None
+        
+        
     else:
         ic.print("Storage not found")
         return None
@@ -164,12 +173,11 @@ def remove_rentee(StorageId:Principal,RenterPrincipal:Principal) ->Async [opt[st
         try:
             account = accounts.get(RenterPrincipal)
             storages = account["Rented_Storages"]
-            storages = [str(i) for i in storages]
             StorageId = str(StorageId)
-            storages.remove(StorageId)
-            storages = [Principal.from_str(i) for i in storages]
-            account["Rented_Storages"] = storages
-            accounts.insert(RenterPrincipal,account)
+            storages = [i for i in storages if str(i) != StorageId]
+            account["Rented_Storages"] = [Principal.from_str(str(i)) for i in storages]
+            accounts.insert(RenterPrincipal, account)
+
         except KeyError:
             return "Rentee not found"
         return result.ok

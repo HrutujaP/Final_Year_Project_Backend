@@ -24,7 +24,7 @@ export interface Storages {
   'My_Storages' : Array<Principal>,
 }
 export interface _SERVICE {
-  'add_balance' : ActorMethod<[Principal, bigint], bigint>,
+  'add_balance' : ActorMethod<[Principal, bigint], [] | [bigint]>,
   'add_rentee' : ActorMethod<[Principal, Principal, string], [] | [Principal]>,
   'create_account' : ActorMethod<[string, string], [] | [Principal]>,
   'create_storage' : ActorMethod<
@@ -39,5 +39,5 @@ export interface _SERVICE {
   'get_balance' : ActorMethod<[Principal], bigint>,
   'get_storage' : ActorMethod<[Principal], [] | [Storage]>,
   'remove_rentee' : ActorMethod<[Principal, Principal], [] | [string]>,
-  'withdraw_balance' : ActorMethod<[Principal, bigint], bigint>,
+  'withdraw_balance' : ActorMethod<[Principal, bigint], [] | [bigint]>,
 }

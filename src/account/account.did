@@ -21,7 +21,7 @@ type Storages = record {
   My_Storages : vec principal;
 };
 service : () -> {
-  add_balance : (principal, nat) -> (nat);
+  add_balance : (principal, nat) -> (opt nat);
   add_rentee : (principal, principal, text) -> (opt principal);
   create_account : (text, text) -> (opt principal);
   create_storage : (int, principal, text, text, int) -> (opt Storage);
@@ -33,5 +33,5 @@ service : () -> {
   get_balance : (principal) -> (nat) query;
   get_storage : (principal) -> (opt Storage) query;
   remove_rentee : (principal, principal) -> (opt text);
-  withdraw_balance : (principal, nat) -> (nat);
+  withdraw_balance : (principal, nat) -> (opt nat);
 }
