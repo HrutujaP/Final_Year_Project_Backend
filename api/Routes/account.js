@@ -7,8 +7,8 @@ import { agent } from '../agent.js';
 
 var router = express.Router();
 
-const accountActor = Actor.createActor(idlFactory, { agent, canisterId: Principal.fromText('rrkah-fqaaa-aaaaa-aaaaq-cai') });
-// const accountActor = Actor.createActor(idlFactory, { agent, canisterId: Principal.fromText('yvrmz-eaaaa-aaaao-aifqq-cai') });
+// const accountActor = Actor.createActor(idlFactory, { agent, canisterId: Principal.fromText('rrkah-fqaaa-aaaaa-aaaaq-cai') });
+const accountActor = Actor.createActor(idlFactory, { agent, canisterId: Principal.fromText('yvrmz-eaaaa-aaaao-aifqq-cai') });
 
 /* This code defines a route for creating a new account using the POST method. It expects the request
 body to contain a JSON object with `name` and `email` properties. It then calls the `create_account`
