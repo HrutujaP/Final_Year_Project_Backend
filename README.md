@@ -32,6 +32,13 @@ dfx deploy (Optional Canister Name)
 ## To Clean Stable Data and clear storages of canister
 ```
 dfx canister uninstall-code (--all to uninstall all canisters / canister_name to uninstall specific canister)
+
+dfx canister uninstall-code --all --network i
+```
+
+## To reinstall the canister
+```
+dfx canister install --all --network ic
 ```
 
 ## To run the Api
@@ -47,3 +54,4 @@ nodemon
 ```
 dfx generate
 ```
+
