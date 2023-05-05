@@ -72,6 +72,7 @@ def removeRentee(Id:Principal) -> opt[str]:
         if storage:
             ic.print("Advertisement found")
             storage["RenterPrincipal"] = None
+            storage["RenteeDuration"] = None
             ic.print("Rentee removed")
             storages.insert(Id,storage)
             return  "Rentee removed"
