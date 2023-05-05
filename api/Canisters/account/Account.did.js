@@ -1,5 +1,5 @@
 export const idlFactory = ({ IDL }) => {
-  const Storage = IDL.Record({
+  const StorageStruct = IDL.Record({
     'Id' : IDL.Principal,
     'Space' : IDL.Int,
     'Path' : IDL.Text,
@@ -35,7 +35,7 @@ export const idlFactory = ({ IDL }) => {
       ),
     'create_storage' : IDL.Func(
         [IDL.Int, IDL.Principal, IDL.Text, IDL.Text, IDL.Int],
-        [IDL.Opt(Storage)],
+        [IDL.Opt(StorageStruct)],
         [],
       ),
     'delete_account' : IDL.Func([IDL.Principal], [IDL.Opt(IDL.Text)], []),
@@ -48,7 +48,7 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'get_balance' : IDL.Func([IDL.Principal], [IDL.Nat], ['query']),
-    'get_storage' : IDL.Func([IDL.Principal], [IDL.Opt(Storage)], ['query']),
+    'get_storage' : IDL.Func([IDL.Principal], [IDL.Opt(StorageStruct)], []),
     'remove_rentee' : IDL.Func(
         [IDL.Principal, IDL.Principal],
         [IDL.Opt(IDL.Text)],

@@ -33,7 +33,7 @@ dfx deploy (Optional Canister Name)
 ```
 dfx canister uninstall-code (--all to uninstall all canisters / canister_name to uninstall specific canister)
 
-dfx canister uninstall-code --all --network i
+dfx canister uninstall-code --all --network ic
 ```
 
 ## To reinstall the canister

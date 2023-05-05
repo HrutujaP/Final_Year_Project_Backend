@@ -2,13 +2,15 @@ from kybra import query, update,StableBTreeMap,Principal,ic,opt,nat,CanisterResu
 
 from account_structure import Account,generate_id,Storages
 from src.storage.types import Storage
+from src.storage.storage_structure import StorageStruct
 
 accounts = StableBTreeMap[Principal,Account](
     memory_id=0,max_key_size=1000,max_value_size=10000
 )
 
 
-storage_canister = Storage(Principal.from_str('ryjl3-tyaaa-aaaaa-aaaba-cai'))
+# storage_canister = Storage(Principal.from_str('ryjl3-tyaaa-aaaaa-aaaba-cai'))
+storage_canister = Storage(Principal.from_str('iapcx-2yaaa-aaaao-aiz3q-cai'))
 
 @update
 def create_account(Name:str,email:str) -> opt[Principal]:
@@ -101,11 +103,11 @@ def withdraw_balance(Id:Principal, amount:nat) -> opt[nat]:
         return None
 
 @update
-def create_storage(Rent:int, OwnerPrincipal:Principal, Path:str, TimePeriod:str, Space:int) ->Async [opt[Storage]]:
-    result :CanisterResult[opt[Storage]] = yield storage_canister.postAdvertisement(Rent, OwnerPrincipal, Path, TimePeriod, Space)
+def create_storage(Rent:int, OwnerPrincipal:Principal, Path:str, TimePeriod:str, Space:int) ->Async [opt[StorageStruct]]:
+    result :CanisterResult[opt[StorageStruct]] = yield storage_canister.postAdvertisement(Rent, OwnerPrincipal, Path, TimePeriod, Space)
     account = accounts.get(OwnerPrincipal)
     
-    if result.ok:
+    if result.ok is not None:
         ic.print(result.ok)
         storage = result.ok
         account["My_Storages"].append(storage["Id"])
@@ -185,9 +187,9 @@ def remove_rentee(StorageId:Principal,RenterPrincipal:Principal) ->Async [opt[st
         ic.print("Rentee not removed")
         return None
        
-@query
-def get_storage(Id:Principal) ->Async [opt[Storage]]:
-    result :CanisterResult[opt[Storage]] =yield storage_canister.getAdvertisement(Id)
+@update
+def get_storage(Id:Principal) ->Async [opt[StorageStruct]]:
+    result :CanisterResult[opt[StorageStruct]] =yield storage_canister.getAdvertisement(Id)
     if result.ok:
         ic.print("Storage account found")
         return result.ok

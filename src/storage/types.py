@@ -1,9 +1,9 @@
 from kybra import Canister,method,opt,Principal
-from src.storage.storage_structure import Storage
+from src.storage.storage_structure import StorageStruct
 
 class Storage(Canister):
     @method
-    def postAdvertisement(self,Rent:int, OwnerPrincipal:Principal, Path:str, TimePeriod:str, Space:int) -> opt[Storage]: ...
+    def postAdvertisement(self,Rent:int, OwnerPrincipal:Principal, Path:str, TimePeriod:str, Space:int) -> opt[StorageStruct]: ...
     
     @method
     def deleteAdvertisement(self,Id:Principal) -> opt[str]:...
@@ -15,6 +15,6 @@ class Storage(Canister):
     def removeRentee(self,Id:Principal) -> opt[str]:...
     
     @method
-    def getAdvertisement(self,Id:Principal) -> opt[Storage]:...
+    def getAdvertisement(self,Id:Principal) -> opt[StorageStruct]:...
     
     

@@ -1,7 +1,7 @@
 import type { Principal } from '@dfinity/principal';
 import type { ActorMethod } from '@dfinity/agent';
 
-export interface Storage {
+export interface StorageStruct {
   'Id' : Principal,
   'Space' : bigint,
   'Path' : string,
@@ -14,10 +14,10 @@ export interface Storage {
 export interface _SERVICE {
   'addRentee' : ActorMethod<[Principal, Principal, string], [] | [Principal]>,
   'deleteAdvertisement' : ActorMethod<[Principal], [] | [string]>,
-  'getAdvertisement' : ActorMethod<[Principal], [] | [Storage]>,
+  'getAdvertisement' : ActorMethod<[Principal], [] | [StorageStruct]>,
   'postAdvertisement' : ActorMethod<
     [bigint, Principal, string, string, bigint],
-    [] | [Storage]
+    [] | [StorageStruct]
   >,
   'removeRentee' : ActorMethod<[Principal], [] | [string]>,
 }

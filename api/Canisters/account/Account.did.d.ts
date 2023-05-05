@@ -9,7 +9,7 @@ export interface Account {
   'My_Storages' : Array<Principal>,
   'Balance' : bigint,
 }
-export interface Storage {
+export interface StorageStruct {
   'Id' : Principal,
   'Space' : bigint,
   'Path' : string,
@@ -29,7 +29,7 @@ export interface _SERVICE {
   'create_account' : ActorMethod<[string, string], [] | [Principal]>,
   'create_storage' : ActorMethod<
     [bigint, Principal, string, string, bigint],
-    [] | [Storage]
+    [] | [StorageStruct]
   >,
   'delete_account' : ActorMethod<[Principal], [] | [string]>,
   'delete_storage' : ActorMethod<[Principal], [] | [string]>,
@@ -37,7 +37,7 @@ export interface _SERVICE {
   'get_all_accounts' : ActorMethod<[], Array<Principal>>,
   'get_all_storages' : ActorMethod<[Principal], [] | [Storages]>,
   'get_balance' : ActorMethod<[Principal], bigint>,
-  'get_storage' : ActorMethod<[Principal], [] | [Storage]>,
+  'get_storage' : ActorMethod<[Principal], [] | [StorageStruct]>,
   'remove_rentee' : ActorMethod<[Principal, Principal], [] | [string]>,
   'withdraw_balance' : ActorMethod<[Principal, bigint], [] | [bigint]>,
 }

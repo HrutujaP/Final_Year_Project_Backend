@@ -1,5 +1,5 @@
 export const idlFactory = ({ IDL }) => {
-  const Storage = IDL.Record({
+  const StorageStruct = IDL.Record({
     'Id' : IDL.Principal,
     'Space' : IDL.Int,
     'Path' : IDL.Text,
@@ -18,12 +18,12 @@ export const idlFactory = ({ IDL }) => {
     'deleteAdvertisement' : IDL.Func([IDL.Principal], [IDL.Opt(IDL.Text)], []),
     'getAdvertisement' : IDL.Func(
         [IDL.Principal],
-        [IDL.Opt(Storage)],
+        [IDL.Opt(StorageStruct)],
         ['query'],
       ),
     'postAdvertisement' : IDL.Func(
         [IDL.Int, IDL.Principal, IDL.Text, IDL.Text, IDL.Int],
-        [IDL.Opt(Storage)],
+        [IDL.Opt(StorageStruct)],
         [],
       ),
     'removeRentee' : IDL.Func([IDL.Principal], [IDL.Opt(IDL.Text)], []),

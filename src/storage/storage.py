@@ -1,15 +1,15 @@
 from kybra import query, update,StableBTreeMap,Principal,ic,opt,nat,null
 
-from storage_structure import Storage,generate_id
+from storage_structure import StorageStruct,generate_id
 
-storages = StableBTreeMap[Principal,Storage](
+storages = StableBTreeMap[Principal,StorageStruct](
     memory_id=1,max_key_size=1000,max_value_size=10000
 )
 
 @update
-def postAdvertisement(Rent:int, OwnerPrincipal:Principal, Path:str, TimePeriod:str, Space:int) -> opt[Storage]:
+def postAdvertisement(Rent:int, OwnerPrincipal:Principal, Path:str, TimePeriod:str, Space:int) -> opt[StorageStruct]:
     adId = generate_id(Path)
-    newAdvertisement : Storage = {
+    newAdvertisement : StorageStruct = {
         "Id" : adId,
         "Rent" : Rent,
         "OwnerPrincipal" : OwnerPrincipal,
@@ -83,7 +83,7 @@ def removeRentee(Id:Principal) -> opt[str]:
         return None
     
 @query
-def getAdvertisement(Id:Principal) -> opt[Storage]:
+def getAdvertisement(Id:Principal) -> opt[StorageStruct]:
     storage = storages.get(Id)
     if storage:
         ic.print("Advertisement found")

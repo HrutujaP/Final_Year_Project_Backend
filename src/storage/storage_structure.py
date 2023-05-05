@@ -1,6 +1,6 @@
 from kybra import Record,Principal,opt,ic
 
-class Storage(Record):
+class StorageStruct(Record):
     Id : Principal
     RenterPrincipal : opt[Principal]
     Rent : int
