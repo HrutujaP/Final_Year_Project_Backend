@@ -36,6 +36,7 @@ export interface _SERVICE {
   'get_account' : ActorMethod<[Principal], [] | [Account]>,
   'get_all_accounts' : ActorMethod<[], Array<Principal>>,
   'get_all_storages' : ActorMethod<[Principal], [] | [Storages]>,
+  'get_available_storages' : ActorMethod<[], Array<StorageStruct>>,
   'get_balance' : ActorMethod<[Principal], bigint>,
   'get_storage' : ActorMethod<[Principal], [] | [StorageStruct]>,
   'remove_rentee' : ActorMethod<[Principal, Principal], [] | [string]>,

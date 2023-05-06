@@ -1,4 +1,4 @@
-from kybra import Record,Principal
+from kybra import Record,Principal,opt
 
 class Account(Record):
     Id : Principal
@@ -8,6 +8,15 @@ class Account(Record):
     My_Storages : list[Principal]
     Rented_Storages : list[Principal]
 
+class StorageStruct(Record):
+    Id : Principal
+    RenterPrincipal : opt[Principal]
+    Rent : int
+    OwnerPrincipal : Principal
+    RenteeDuration : opt[str]
+    Path : str
+    Space: int
+    TimePeriod : str
 
 def generate_id(id) -> Principal:
     id = letters(id)

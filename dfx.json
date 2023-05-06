@@ -9,17 +9,6 @@
                 "output": "api/Canisters/account",
                 "node_compatibility": true
             }
-        },
-        "Storage": {
-            "type": "custom",
-            "build": "python3 -m kybra storage src/storage/storage.py src/storage/storage.did",
-            "candid": "src/storage/storage.did",
-            "wasm": ".kybra/storage/storage.wasm.gz",
-            "declarations": {
-                "output": "api/Canisters/storage",
-                "node_compatibility": true
-            }
-        }
-   
+        } 
     }
 }

@@ -1,16 +1,20 @@
-from kybra import query, update,StableBTreeMap,Principal,ic,opt,nat,CanisterResult,Async
+from kybra import query, update,StableBTreeMap,Principal,ic,opt,nat
+from src.account.structure import Account,generate_id,Storages,StorageStruct
 
-from account_structure import Account,generate_id,Storages
-from src.storage.types import Storage
-from src.storage.storage_structure import StorageStruct
 
 accounts = StableBTreeMap[Principal,Account](
     memory_id=0,max_key_size=1000,max_value_size=10000
 )
+storages = StableBTreeMap[Principal,StorageStruct](
+    memory_id=1,max_key_size=1000,max_value_size=10000
+)
 
+available_storages = StableBTreeMap[Principal,StorageStruct](
+    memory_id=2,max_key_size=1000,max_value_size=10000
+)
 
-# storage_canister = Storage(Principal.from_str('ryjl3-tyaaa-aaaaa-aaaba-cai'))
-storage_canister = Storage(Principal.from_str('iapcx-2yaaa-aaaao-aiz3q-cai'))
+# # storage_canister = Storage(Principal.from_str('ryjl3-tyaaa-aaaaa-aaaba-cai'))
+# storage_canister = Storage(Principal.from_str('iapcx-2yaaa-aaaao-aiz3q-cai'))
 
 @update
 def create_account(Name:str,email:str) -> opt[Principal]:
@@ -103,98 +107,121 @@ def withdraw_balance(Id:Principal, amount:nat) -> opt[nat]:
         return None
 
 @update
-def create_storage(Rent:int, OwnerPrincipal:Principal, Path:str, TimePeriod:str, Space:int) ->Async [opt[StorageStruct]]:
-    result :CanisterResult[opt[StorageStruct]] = yield storage_canister.postAdvertisement(Rent, OwnerPrincipal, Path, TimePeriod, Space)
-    account = accounts.get(OwnerPrincipal)
+def create_storage(Rent:int, OwnerPrincipal:Principal, Path:str, TimePeriod:str, Space:int) ->opt[StorageStruct]:
+    adId = generate_id(Path+OwnerPrincipal.to_str())
+    newAdvertisement : StorageStruct = {
+        "Id" : adId,
+        "Rent" : Rent,
+        "OwnerPrincipal" : OwnerPrincipal,
+        "Path" : Path,
+        "RenterPrincipal" : None,
+        "TimePeriod" : TimePeriod,
+        "RenteeDuration" :None,
+        "Space" : Space
+    }
     
-    if result.ok is not None:
-        ic.print(result.ok)
-        storage = result.ok
-        account["My_Storages"].append(storage["Id"])
-        accounts.insert(OwnerPrincipal,account)
-        ic.print("Storage created And Added Successfully")
-        return result.ok
+    if not storages.contains_key(adId):
+        Storage = storages.insert(adId, newAdvertisement)
+        if Storage:
+            ic.print("Storage created")
+            available_storages.insert(adId, newAdvertisement)
+            account = accounts.get(OwnerPrincipal)
+            
+            if account:
+                account["My_Storages"].append(adId)
+                accounts.insert(OwnerPrincipal,account)
+                ic.print("Storage created And Added Successfully")
+                return newAdvertisement   
+        else:
+            ic.print("Storage not created")
+            return None
     else:
-        ic.print("Storage not created")
-        return result.err
+        ic.print("Storage already exists")
+        storage = storages.get(adId)
+        return storage    
  
 @update
-def delete_storage(Id:Principal) ->Async [opt[str]]:
-    storage :CanisterResult[opt[Storage]] = yield storage_canister.getAdvertisement(Id)
-    ic.print(storage)
-    if storage.ok is not None: 
-        storage = storage.ok
-        result :CanisterResult[opt[str]] =yield storage_canister.deleteAdvertisement(Id)
-        owner = storage["OwnerPrincipal"]
-        renter = storage["RenterPrincipal"]
+def delete_storage(Id:Principal) ->opt[str]:
+    if storages.contains_key(Id):
+        storage = storages.remove(Id)
         
-        if renter:
-            account = accounts.get(renter)
-            storages = account["Rented_Storages"]
-            StorageId = str(storage["Id"])
-            storages = [i for i in storages if str(i) != StorageId]
-            account["Rented_Storages"] = [Principal.from_str(str(i)) for i in storages]
-            accounts.insert(renter, account)
-        
-        if result:
-            account = accounts.get(owner)
-            storages = account["My_Storages"]
-            StorageId = str(storage["Id"])
-            storages = [i for i in storages if str(i) != StorageId]
-            account["My_Storages"] = [Principal.from_str(str(i)) for i in storages]
-            accounts.insert(owner, account)
-        
-            return result.ok
+        if storage:
+            owner = storage["OwnerPrincipal"]
+            renter = storage["RenterPrincipal"]
             
+            owner_account = accounts.get(owner)
+            owner_storages = owner_account["My_Storages"]
+            owner_storages = [i for i in owner_storages if str(i) != str(Id)]
+            owner_account["My_Storages"] = [Principal.from_str(str(i)) for i in owner_storages]
+            accounts.insert(owner, owner_account)
+            
+            if renter:
+                renter_account = accounts.get(renter)
+                renter_storages = renter_account["Rented_Storages"]
+                renter_storages = [i for i in renter_storages if str(i) != str(Id)]
+                renter_account["Rented_Storages"] = [Principal.from_str(str(i)) for i in renter_storages]
+                accounts.insert(renter, renter_account)
+            
+            available_storages.remove(Id)
+            ic.print("Storage deleted")
+            return "Storage deleted"
         else:
             ic.print("Storage not deleted")
             return None
-        
-        
+    else:
+        ic.print("Storage does not exist")
+        return "Storage does not exist"
+    
+@update
+def add_rentee(StorageId:Principal, RenterPrincipal:Principal,duration:str) ->opt[Principal]:
+    if storages.contains_key(StorageId):
+        storage = storages.get(StorageId)
+        if storage:
+            ic.print("Storage found")
+            storage["RenterPrincipal"] = RenterPrincipal
+            storage["RenteeDuration"] = duration
+            storages.insert(StorageId,storage)
+            account = accounts.get(RenterPrincipal)
+            account["Rented_Storages"].append(StorageId)
+            accounts.insert(RenterPrincipal,account)
+            
+            available_storages.remove(StorageId)
+            ic.print( storage["RenterPrincipal"])
+            return storage["RenterPrincipal"]
     else:
         ic.print("Storage not found")
         return None
     
 @update
-def add_rentee(StorageId:Principal, RenterPrincipal:Principal,duration:str) ->Async [opt[Principal]]:
-    result :CanisterResult[opt[Principal]] =yield storage_canister.addRentee(StorageId,RenterPrincipal,duration)
-    if result:
-        account = accounts.get(RenterPrincipal)
-        account["Rented_Storages"].append(StorageId)
-        accounts.insert(RenterPrincipal,account)
-        ic.print("Rentee Added!!")
-        return result.ok
-    else:
-        ic.print("Rentee not added")
-        return None
-    
-@update
-def remove_rentee(StorageId:Principal,RenterPrincipal:Principal) ->Async [opt[str]]:
-    result :CanisterResult[opt[str]] =yield storage_canister.removeRentee(StorageId)
-    if result:
-        try:
+def remove_rentee(StorageId:Principal,RenterPrincipal:Principal) ->opt[str]:
+    if storages.contains_key(StorageId):
+        storage = storages.get(StorageId)
+        if storage:
+            ic.print("Storage found")
+            storage["RenterPrincipal"] = None
+            storage["RenteeDuration"] = None
+            storages.insert(StorageId,storage)
+            
             account = accounts.get(RenterPrincipal)
-            storages = account["Rented_Storages"]
-            StorageId = str(StorageId)
-            storages = [i for i in storages if str(i) != StorageId]
-            account["Rented_Storages"] = [Principal.from_str(str(i)) for i in storages]
-            accounts.insert(RenterPrincipal, account)
-
-        except KeyError:
-            return "Rentee not found"
-        return result.ok
+            account["Rented_Storages"] = [i for i in account["Rented_Storages"] if str(i) != str(StorageId)]
+            accounts.insert(RenterPrincipal,account)
+            
+            available_storages.insert(StorageId,storage)
+            ic.print( storage["RenterPrincipal"])
+            return "Rentee removed"
     else:
-        ic.print("Rentee not removed")
+        ic.print("Storage not found")
         return None
        
-@update
-def get_storage(Id:Principal) ->Async [opt[StorageStruct]]:
-    result :CanisterResult[opt[StorageStruct]] =yield storage_canister.getAdvertisement(Id)
-    if result.ok:
-        ic.print("Storage account found")
-        return result.ok
+@query
+def get_storage(Id:Principal) ->opt[StorageStruct]:
+    if storages.contains_key(Id):
+        storage = storages.get(Id)
+        if storage:
+            ic.print("Storage found")
+            return storage
     else:
-        ic.print("Storage account not found")
+        ic.print("Storage not found")
         return None
 
 @query
@@ -213,6 +240,9 @@ def get_all_storages(Id:Principal) -> opt[Storages]:
     else:
         return None
     
+@query
+def get_available_storages() -> list[StorageStruct]:
+    return available_storages.values()
 
 @query
 def get_all_accounts() -> list[Principal]:

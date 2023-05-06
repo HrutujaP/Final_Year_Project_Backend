@@ -47,8 +47,17 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Opt(Storages)],
         ['query'],
       ),
+    'get_available_storages' : IDL.Func(
+        [],
+        [IDL.Vec(StorageStruct)],
+        ['query'],
+      ),
     'get_balance' : IDL.Func([IDL.Principal], [IDL.Nat], ['query']),
-    'get_storage' : IDL.Func([IDL.Principal], [IDL.Opt(StorageStruct)], []),
+    'get_storage' : IDL.Func(
+        [IDL.Principal],
+        [IDL.Opt(StorageStruct)],
+        ['query'],
+      ),
     'remove_rentee' : IDL.Func(
         [IDL.Principal, IDL.Principal],
         [IDL.Opt(IDL.Text)],

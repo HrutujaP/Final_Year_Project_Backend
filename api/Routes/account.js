@@ -153,6 +153,7 @@ router.get('/get_storage',async (req, res) => {
 
         result["Id"] = storage_principal
         var owener_principal = Principal.fromUint8Array(result.OwnerPrincipal._arr);
+        console.log(owener_principal);
         result["OwnerPrincipal"] = owener_principal.toText();
         var renter = result["RenterPrincipal"];
         renter = renter[0];
@@ -239,6 +240,32 @@ router.post('/remove_rentee', async (req, res) => {
     }catch(err){
         console.log(err);
         res.send(err);
+    }
+});
+
+router.get('/get_available_storages', async (req, res) => {
+    try{
+        var result = await accountActor.get_available_storages();
+        if(result != null){
+        result = result.map((storage) => {
+            const principal = Principal.fromUint8Array(storage.Id._arr);   
+            storage["Id"] =principal.toText();
+            var owener_principal = Principal.fromUint8Array(storage.OwnerPrincipal._arr);
+            storage["OwnerPrincipal"] = owener_principal.toText();
+
+            storage = JSON.parse(JSON.stringify(storage, (key, value) =>
+            typeof value === 'bigint'
+                ? value.toString()
+                : value
+            ));
+            return storage;
+        });
+        res.send(result);}
+        else{
+            res.send([]);
+        }
+    }catch(err){
+        console.log(err);
     }
 });
 
