@@ -94,7 +94,7 @@ router.get('/get_account',async (req, res) => {
 
 router.get('/get_storages', async (req, res) => {
     try {
-        const { account_principal } = req.body; 
+        const  account_principal = req.query.account_principal.toString();
         const principal = Principal.fromText(account_principal); 
         const [result] = await accountActor.get_all_storages(principal); 
         const rented_storages = result.Rented_Storages.map(storage => Principal.fromUint8Array(storage._arr).toText()); 
