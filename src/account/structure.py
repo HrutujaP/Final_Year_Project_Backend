@@ -10,13 +10,19 @@ class Account(Record):
 
 class StorageStruct(Record):
     Id : Principal
-    RenterPrincipal : opt[Principal]
-    Rent : int
     OwnerPrincipal : Principal
-    RenteeDuration : opt[str]
+    Name : str
+    Description : str
     Path : str
     Space: int
+    Rent : int
     TimePeriod : str
+    RenterPrincipal : opt[Principal]
+    RenteeDuration : opt[str]
+    Timings : str 
+    UsedSpace : int
+    Files : list[str]
+    FileExt : list[str]
 
 def generate_id(id) -> Principal:
     id = letters(id)

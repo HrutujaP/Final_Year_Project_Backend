@@ -7,8 +7,8 @@ import { agent } from '../agent.js';
 
 var router = express.Router();
 
-// const accountActor = Actor.createActor(idlFactory, { agent, canisterId: Principal.fromText('rrkah-fqaaa-aaaaa-aaaaq-cai') });
-const accountActor = Actor.createActor(idlFactory, { agent, canisterId: Principal.fromText('yvrmz-eaaaa-aaaao-aifqq-cai') });
+const accountActor = Actor.createActor(idlFactory, { agent, canisterId: Principal.fromText('rrkah-fqaaa-aaaaa-aaaaq-cai') });
+// const accountActor = Actor.createActor(idlFactory, { agent, canisterId: Principal.fromText('yvrmz-eaaaa-aaaao-aifqq-cai') });
 
 router.post('/create_account', async (req, res) => {
     
@@ -180,9 +180,9 @@ router.get('/get_storage',async (req, res) => {
 router.post('/create_storage', async (req, res) => {
     try{
 
-        var {rent,owner_principal,path,timeperiod,storage_size} = req.body;
+        var {rent,owner_principal,path,timeperiod,storage_size,name,description,timings} = req.body;
         var principal = Principal.fromText(owner_principal);
-        var result = await accountActor.create_storage(BigInt(rent),principal,path,timeperiod,BigInt(storage_size));
+        var result = await accountActor.create_storage(BigInt(rent),principal,timeperiod,BigInt(storage_size),[name,description,timings,path]);
         result = result[0];
         console.log(result);
         if(result != null){

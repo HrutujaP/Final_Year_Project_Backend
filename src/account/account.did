@@ -9,10 +9,16 @@ type Account = record {
 type StorageStruct = record {
   Id : principal;
   Space : int;
+  Name : text;
+  UsedSpace : int;
   Path : text;
   Rent : int;
+  Description : text;
   RenterPrincipal : opt principal;
   RenteeDuration : opt text;
+  Files : vec text;
+  Timings : text;
+  FileExt : vec text;
   TimePeriod : text;
   OwnerPrincipal : principal;
 };
@@ -24,7 +30,7 @@ service : () -> {
   add_balance : (principal, nat) -> (opt nat);
   add_rentee : (principal, principal, text) -> (opt principal);
   create_account : (text, text) -> (opt principal);
-  create_storage : (int, principal, text, text, int) -> (opt StorageStruct);
+  create_storage : (int, principal, text, int, vec text) -> (opt StorageStruct);
   delete_account : (principal) -> (opt text);
   delete_storage : (principal) -> (opt text);
   get_account : (principal) -> (opt Account) query;

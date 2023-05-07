@@ -2,10 +2,16 @@ export const idlFactory = ({ IDL }) => {
   const StorageStruct = IDL.Record({
     'Id' : IDL.Principal,
     'Space' : IDL.Int,
+    'Name' : IDL.Text,
+    'UsedSpace' : IDL.Int,
     'Path' : IDL.Text,
     'Rent' : IDL.Int,
+    'Description' : IDL.Text,
     'RenterPrincipal' : IDL.Opt(IDL.Principal),
     'RenteeDuration' : IDL.Opt(IDL.Text),
+    'Files' : IDL.Vec(IDL.Text),
+    'Timings' : IDL.Text,
+    'FileExt' : IDL.Vec(IDL.Text),
     'TimePeriod' : IDL.Text,
     'OwnerPrincipal' : IDL.Principal,
   });
@@ -34,7 +40,7 @@ export const idlFactory = ({ IDL }) => {
         [],
       ),
     'create_storage' : IDL.Func(
-        [IDL.Int, IDL.Principal, IDL.Text, IDL.Text, IDL.Int],
+        [IDL.Int, IDL.Principal, IDL.Text, IDL.Int, IDL.Vec(IDL.Text)],
         [IDL.Opt(StorageStruct)],
         [],
       ),

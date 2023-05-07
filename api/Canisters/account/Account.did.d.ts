@@ -12,10 +12,16 @@ export interface Account {
 export interface StorageStruct {
   'Id' : Principal,
   'Space' : bigint,
+  'Name' : string,
+  'UsedSpace' : bigint,
   'Path' : string,
   'Rent' : bigint,
+  'Description' : string,
   'RenterPrincipal' : [] | [Principal],
   'RenteeDuration' : [] | [string],
+  'Files' : Array<string>,
+  'Timings' : string,
+  'FileExt' : Array<string>,
   'TimePeriod' : string,
   'OwnerPrincipal' : Principal,
 }
@@ -28,7 +34,7 @@ export interface _SERVICE {
   'add_rentee' : ActorMethod<[Principal, Principal, string], [] | [Principal]>,
   'create_account' : ActorMethod<[string, string], [] | [Principal]>,
   'create_storage' : ActorMethod<
-    [bigint, Principal, string, string, bigint],
+    [bigint, Principal, string, bigint, Array<string>],
     [] | [StorageStruct]
   >,
   'delete_account' : ActorMethod<[Principal], [] | [string]>,
