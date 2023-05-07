@@ -152,6 +152,37 @@ def create_storage(Rent: int, OwnerPrincipal: Principal, TimePeriod: str, Space:
         storage = storages.get(adId)
         return storage
 
+@update
+def add_file(Id:Principal, file:str, ext:str, size:int) -> opt[StorageStruct]:
+    if storages.contains_key(Id):
+        storage = storages.get(Id)
+        if storage:
+            ic.print("Storage found")
+            storage["Files"].append(file)
+            storage["FileExt"].append(ext)
+            storage["UsedSpace"] += size
+            storages.insert(Id, storage)
+            ic.print("File added")
+            return storage
+    else:
+        ic.print("Storage not found")
+        return None
+    
+@update
+def remove_file(Id:Principal, file:str, ext:str, size:int) -> opt[StorageStruct]:
+    if storages.contains_key(Id):
+        storage = storages.get(Id)
+        if storage:
+            ic.print("Storage found")
+            storage["Files"].remove(file)
+            storage["FileExt"].remove(ext)
+            storage["UsedSpace"] -= size
+            storages.insert(Id, storage)
+            ic.print("File removed")
+            return storage
+    else:
+        ic.print("Storage not found")
+        return None
 
 @update
 def delete_storage(Id: Principal) -> opt[str]:

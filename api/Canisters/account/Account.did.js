@@ -29,6 +29,11 @@ export const idlFactory = ({ IDL }) => {
   });
   return IDL.Service({
     'add_balance' : IDL.Func([IDL.Principal, IDL.Nat], [IDL.Opt(IDL.Nat)], []),
+    'add_file' : IDL.Func(
+        [IDL.Principal, IDL.Text, IDL.Text, IDL.Int],
+        [IDL.Opt(StorageStruct)],
+        [],
+      ),
     'add_rentee' : IDL.Func(
         [IDL.Principal, IDL.Principal, IDL.Text],
         [IDL.Opt(IDL.Principal)],
@@ -63,6 +68,11 @@ export const idlFactory = ({ IDL }) => {
         [IDL.Principal],
         [IDL.Opt(StorageStruct)],
         ['query'],
+      ),
+    'remove_file' : IDL.Func(
+        [IDL.Principal, IDL.Text, IDL.Text, IDL.Int],
+        [IDL.Opt(StorageStruct)],
+        [],
       ),
     'remove_rentee' : IDL.Func(
         [IDL.Principal, IDL.Principal],

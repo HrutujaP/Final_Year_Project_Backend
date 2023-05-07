@@ -31,6 +31,10 @@ export interface Storages {
 }
 export interface _SERVICE {
   'add_balance' : ActorMethod<[Principal, bigint], [] | [bigint]>,
+  'add_file' : ActorMethod<
+    [Principal, string, string, bigint],
+    [] | [StorageStruct]
+  >,
   'add_rentee' : ActorMethod<[Principal, Principal, string], [] | [Principal]>,
   'create_account' : ActorMethod<[string, string], [] | [Principal]>,
   'create_storage' : ActorMethod<
@@ -45,6 +49,10 @@ export interface _SERVICE {
   'get_available_storages' : ActorMethod<[], Array<StorageStruct>>,
   'get_balance' : ActorMethod<[Principal], bigint>,
   'get_storage' : ActorMethod<[Principal], [] | [StorageStruct]>,
+  'remove_file' : ActorMethod<
+    [Principal, string, string, bigint],
+    [] | [StorageStruct]
+  >,
   'remove_rentee' : ActorMethod<[Principal, Principal], [] | [string]>,
   'withdraw_balance' : ActorMethod<[Principal, bigint], [] | [bigint]>,
 }

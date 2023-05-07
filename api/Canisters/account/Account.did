@@ -28,6 +28,7 @@ type Storages = record {
 };
 service : () -> {
   add_balance : (principal, nat) -> (opt nat);
+  add_file : (principal, text, text, int) -> (opt StorageStruct);
   add_rentee : (principal, principal, text) -> (opt principal);
   create_account : (text, text) -> (opt principal);
   create_storage : (int, principal, text, int, vec text) -> (opt StorageStruct);
@@ -39,6 +40,7 @@ service : () -> {
   get_available_storages : () -> (vec StorageStruct) query;
   get_balance : (principal) -> (nat) query;
   get_storage : (principal) -> (opt StorageStruct) query;
+  remove_file : (principal, text, text, int) -> (opt StorageStruct);
   remove_rentee : (principal, principal) -> (opt text);
   withdraw_balance : (principal, nat) -> (opt nat);
 }

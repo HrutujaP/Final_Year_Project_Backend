@@ -209,6 +209,34 @@ router.post('/create_storage', async (req, res) => {
             
 });
 
+router.post('/add_file', async (req, res) => { 
+    try {
+        const { storage_principal, file_name, file_ext, file_size } = req.body;
+        const principal = Principal.fromText(storage_principal);
+        const result = await accountActor.add_file(principal, file_name, file_ext, BigInt(file_size));
+        console.log(result);
+        res.send({status:"success"});
+    } catch (err) {
+        console.log(err);   
+        res.send(err);
+    }
+});
+
+router.post('/delete_file', async (req, res) => {
+    try{
+        const { storage_principal, file_name } = req.body;
+        const principal = Principal.fromText(storage_principal);
+        const result = await accountActor.delete_file(principal, file_name);
+        console.log(result);
+        res.send({status:"success"});
+    }catch(err){
+        console.log(err);
+        res.send(err);
+    }
+});
+
+
+
 
 router.post('/add_rentee', async (req, res) => {
     try{
