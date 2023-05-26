@@ -14,7 +14,7 @@ class StorageStruct(Record):
     Name : str
     Description : str
     Path : str
-    Space: int
+    Space: float
     Rent : int
     TimePeriod : str
     RenterPrincipal : opt[Principal]

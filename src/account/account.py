@@ -113,7 +113,7 @@ def withdraw_balance(Id: Principal, amount: nat) -> opt[nat]:
 
 
 @update
-def create_storage(Rent: int, OwnerPrincipal: Principal, TimePeriod: str, Space: int, ndtp:list[str]) -> opt[StorageStruct]:
+def create_storage(Rent: int, OwnerPrincipal: Principal, TimePeriod: str, Space: float, ndtp:list[str]) -> opt[StorageStruct]:
     adId = generate_id(ndtp[3]+OwnerPrincipal.to_str()+TimePeriod)
     newAdvertisement: StorageStruct = {
         "Id": adId,
@@ -153,7 +153,7 @@ def create_storage(Rent: int, OwnerPrincipal: Principal, TimePeriod: str, Space:
         return storage
 
 @update
-def add_file(Id:Principal, file:str, ext:str, size:int) -> opt[StorageStruct]:
+def add_file(Id:Principal, file:str, ext:str, size:float) -> opt[StorageStruct]:
     if storages.contains_key(Id):
         storage = storages.get(Id)
         if storage:
@@ -169,7 +169,7 @@ def add_file(Id:Principal, file:str, ext:str, size:int) -> opt[StorageStruct]:
         return None
     
 @update
-def remove_file(Id:Principal, file:str, ext:str, size:int) -> opt[StorageStruct]:
+def remove_file(Id:Principal, file:str, ext:str, size:float) -> opt[StorageStruct]:
     if storages.contains_key(Id):
         storage = storages.get(Id)
         if storage:
