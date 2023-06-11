@@ -114,7 +114,7 @@ def withdraw_balance(Id: Principal, amount: nat) -> opt[nat]:
 
 @update
 def create_storage(Rent: int, OwnerPrincipal: Principal, TimePeriod: str, Space: int, ndtp:list[str]) -> opt[StorageStruct]:
-    adId = generate_id(ndtp[3]+OwnerPrincipal.to_str()+TimePeriod)
+    adId = generate_id(ndtp[3]+OwnerPrincipal.to_str()+ndtp[0]+ndtp[1])
     newAdvertisement: StorageStruct = {
         "Id": adId,
         "OwnerPrincipal": OwnerPrincipal,

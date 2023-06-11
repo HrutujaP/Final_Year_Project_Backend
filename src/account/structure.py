@@ -27,6 +27,7 @@ class StorageStruct(Record):
 def generate_id(id) -> Principal:
     id = letters(id)
     id = id * 10
+    id = id[::3]
     gen_bytes = bytes([ord(c) for c in id[:29]])
     generated_id = Principal.from_hex(gen_bytes.hex())
   
